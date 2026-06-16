@@ -52,6 +52,13 @@ export default function DashboardPage() {
           color="purple" 
         />
         <StatCard 
+          title="Validasyon (Loss)" 
+          value="1.194" 
+          subtext="Final Weights Ready" 
+          icon={Database} 
+          color="purple" 
+        />
+        <StatCard 
           title="Güven Skoru" 
           value="%91.2" 
           subtext="Doğrulanmış Tahmin Başarısı" 
