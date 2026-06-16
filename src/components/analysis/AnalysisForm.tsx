@@ -192,35 +192,48 @@ export const AnalysisForm = ({ onAnalyze, isLoading }: AnalysisFormProps) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // PDF dosyası için erken uyarı (Eğer backend henüz PDF desteklemiyorsa)
+    if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
+      alert("Şu an için sadece görsel dosyaları (.png, .jpg, .jpeg) desteklenmektedir.");
+      return;
+    }
+
     const bodyData = new FormData();
-    bodyData.append("file", file);
+    bodyData.append("file", file); // Backend'deki "file: UploadFile = File(...)" tanımı ile tam uyumlu
 
     try {
       const response = await fetch('http://127.0.0.1:8000/upload-report', {
         method: 'POST',
-        body: bodyData,
+        body: bodyData, // Tarayıcı FormData gönderirken Content-Type'ı otomatik 'multipart/form-data' yapar, manuel eklemeyin.
       });
 
       if (!response.ok) {
         console.error("Sunucu yanıt vermedi! Durum kodu:", response.status);
+        alert("OCR sunucusu hata döndürdü. Lütfen görsel kalitesini kontrol edin.");
         return;
       }
 
       const data = await response.json();
       console.log("GELEN VERİ:", data);
       
-      if (data.extracted) {
+      // Backend'de yaptığımız güncelleme sayesinde artık data.extracted doğrudan okunacak
+      if (data.extracted && Object.keys(data.extracted).length > 0) {
         setFormData((prev: any) => ({
           ...prev,
-          labValues: { ...prev.labValues, ...data.extracted }
+          labValues: { 
+            ...prev.labValues, 
+            ...data.extracted // Gelen tahlil parametreleri (wbc, hgb vb.) form state'ine enjekte edilir
+          }
         }));
-        alert("Başarıyla yüklendi!");
+        alert(`Başarıyla yüklendi! (${Object.keys(data.extracted).length} parametre dolduruldu)`);
+      } else {
+        alert("Görsel okundu ancak form alanlarıyla eşleşen tahlil parametresi (HGB, WBC, ALT vb.) bulunamadı.");
       }
     } catch (error) {
       console.error("Ağ hatası veya bağlantı reddedildi:", error);
+      alert("Sunucuya bağlanılamadı. Lütfen api_server.py'nin localde çalıştığından emin olun.");
     }
   };
-
   // KAN VERİ SETLERİ
  const hemogramFields = [
     { id: 'wbc', label: 'WBC', unit: 'K/uL', ref: '4.0-10.5' },
