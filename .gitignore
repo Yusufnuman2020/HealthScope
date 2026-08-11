@@ -36,6 +36,18 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# windows
+*.lnk
+Thumbs.db
 
 # vercel
 .vercel
@@ -45,3 +57,20 @@ yarn-error.log*
 next-env.d.ts
 
 
+
+# yerel indirilen model agirliklari (buyuk, repoya girmez)
+models/
+
+# Poppler ikilileri — platforma ozgu, 70 MB; README'deki baglantidan indirilir
+POPPLER/
+
+# Yapay zeka asistani yonergeleri - repoya girmez
+CLAUDE.md
+AGENTS.md
+.claude/
+
+# Uretilen dokumantasyon ara ciktisi (PDF ve MD repoda kalir)
+docs/HealthScope-Nasil-Calisir.html
+
+# Kisisel tanitim taslagi
+docs/linkedin-tanitim.md
