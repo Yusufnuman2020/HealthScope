@@ -1,0 +1,37 @@
+# HealthScope — Python backend bağımlılıkları
+# Kurulum:  pip install -r requirements.txt
+#
+# GPU (CUDA) ile çalıştırmak için torch'u önce resmi indeks üzerinden kurun:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+# Aksi hâlde CPU sürümü yüklenir ve çıkarım yavaş ama çalışır durumda olur.
+
+# ── API sunucusu ──────────────────────────────────────────────────────────
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30
+pydantic>=2.7,<3.0
+python-multipart>=0.0.9        # UploadFile / multipart form desteği için ZORUNLU
+python-dotenv>=1.0             # .env dosyasından yapılandırma
+
+# ── Yapay zeka çıkarımı ───────────────────────────────────────────────────
+torch>=2.2
+transformers>=4.40
+
+# ── OCR ardışık düzeni ────────────────────────────────────────────────────
+# Bu üçü olmadan sunucu yine ayağa kalkar; yalnızca /upload-report 503 döner.
+easyocr>=1.7
+opencv-python-headless>=4.9
+pdf2image>=1.17                # PDF için ayrıca Poppler ikilileri gerekir
+numpy>=1.26
+
+# ── Hibrit üretken katman (opsiyonel) ─────────────────────────────────────
+# Yalnızca HEALTHSCOPE_LLM_PROVIDER=local kullanılacaksa gerekir.
+# `openai-compatible` sağlayıcı (Ollama, LM Studio) ek paket istemez.
+# accelerate      : device_map="auto" ile model yerleşimi
+# bitsandbytes    : 4-bit niceleme; 8 GB VRAM'de 7B modeli sığdırır.
+#                   Kurulamazsa sistem otomatik fp16'ya düşer.
+accelerate>=0.30
+# bitsandbytes>=0.43          # Windows'ta sorun çıkarsa yorumda bırakın
+
+# ── Test ──────────────────────────────────────────────────────────────────
+pytest>=8.0
+httpx>=0.27                    # fastapi.testclient bunu kullanır

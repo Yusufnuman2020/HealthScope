@@ -1,0 +1,44 @@
+# Klinik veritabanının tutarlılığını her push'ta doğrular.
+#
+# Bu iş akışı özellikle şu hata sınıfını yakalamak için var: form alanı,
+# OCR anahtarı, referans aralığı ve beslenme protokolü anahtarlarının
+# birbirinden sapması (ör. `insülin` vs `insulin`).
+name: Tests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  python:
+    name: Backend & katalog testleri
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Bağımlılıkları kur
+        # Ağır AI/OCR paketleri testler için gerekmez; api_server bunlar
+        # olmadan da ayağa kalkacak şekilde tasarlandı.
+        run: pip install fastapi "pydantic>=2" python-dotenv pytest httpx torch --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple
+
+      - name: pytest
+        run: python -m pytest tests -q
+
+  frontend:
+    name: Lint & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npx eslint src
+      - run: npm run build

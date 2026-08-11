@@ -1,27 +1,1910 @@
 {
-  "REFERENCE_RANGES": {
-    "rbc": {"min": 3.90, "max": 5.50, "unit": "M/uL", "label": "RBC (Eritrosit)", "domain": "Hematoloji"},
-    "wbc": {"min": 4.0, "max": 10.6, "unit": "K/uL", "label": "WBC (Lökosit)", "domain": "İmmünoloji"},
-    "hgb": {"min": 12.0, "max": 16.8, "unit": "g/dL", "label": "HGB (Hemoglobin)", "domain": "Hematoloji"},
-    "hct": {"min": 36.0, "max": 48.0, "unit": "%", "label": "HCT (Hematokrit)", "domain": "Hematoloji"},
-    "plt": {"min": 139, "max": 346, "unit": "K/uL", "label": "PLT (Trombosit)", "domain": "Hematoloji"},
-    "mcv": {"min": 81.7, "max": 99.6, "unit": "fL", "label": "MCV", "domain": "Hematoloji"},
-    "glukoz": {"min": 70, "max": 99, "unit": "mg/dL", "label": "Glukoz", "domain": "Endokrinoloji"},
-    "hba1c": {"min": 4.0, "max": 5.6, "unit": "%", "label": "HbA1c", "domain": "Endokrinoloji"},
-    "insülin": {"min": 2.6, "max": 24.9, "unit": "uIU/mL", "label": "İnsülin", "domain": "Endokrinoloji"},
-    "crp": {"min": 0, "max": 5, "unit": "mg/L", "label": "CRP", "domain": "İmmünoloji"},
-    "sedim": {"min": 0, "max": 20, "unit": "mm/h", "label": "Sedimantasyon", "domain": "İmmünoloji"},
-    "alt": {"min": 1, "max": 50, "unit": "U/L", "label": "ALT", "domain": "Hepatoloji"},
-    "ast": {"min": 0, "max": 50, "unit": "U/L", "label": "AST", "domain": "Hepatoloji"},
-    "ggt": {"min": 0, "max": 55, "unit": "U/L", "label": "GGT", "domain": "Hepatoloji"},
-    "alp": {"min": 30, "max": 120, "unit": "U/L", "label": "ALP", "domain": "Hepatoloji"},
-    "ure": {"min": 17, "max": 43, "unit": "mg/dL", "label": "Üre", "domain": "Nefroloji"},
-    "kreatinin": {"min": 0.6, "max": 1.2, "unit": "mg/dL", "label": "Kreatinin", "domain": "Nefroloji"},
-    "urik_asit": {"min": 2.4, "max": 6.0, "unit": "mg/dL", "label": "Ürik Asit", "domain": "Nefroloji"},
-    "kolesterol": {"min": 100, "max": 200, "unit": "mg/dL", "label": "Total Kolesterol", "domain": "Kardiyovasküler"},
-    "trigliserid": {"min": 0, "max": 150, "unit": "mg/dL", "label": "Trigliserid", "domain": "Kardiyovasküler"},
-    "ldl": {"min": 0, "max": 130, "unit": "mg/dL", "label": "LDL (Kötü) Kolesterol", "domain": "Kardiyovasküler"},
-    "hdl": {"min": 40, "max": 60, "unit": "mg/dL", "label": "HDL (İyi) Kolesterol", "domain": "Kardiyovasküler"}
+  "PARAMETER_GROUPS": {
+    "hemogram": {
+      "label": "Hemogram (Tam Kan Sayımı)",
+      "accent": "red",
+      "icon": "Activity"
+    },
+    "biyokimya": {
+      "label": "Biyokimya & Elektrolit Paneli",
+      "accent": "emerald",
+      "icon": "Zap"
+    },
+    "endokrin": {
+      "label": "Endokrin, Tiroid & Vitamin Paneli",
+      "accent": "purple",
+      "icon": "HeartPulse"
+    },
+    "inflamasyon": {
+      "label": "İnflamasyon Belirteçleri",
+      "accent": "rose",
+      "icon": "Flame"
+    },
+    "diyabet": {
+      "label": "Diyabet & İdrar Mikroskopisi",
+      "accent": "amber",
+      "icon": "Droplet"
+    },
+    "lipid": {
+      "label": "Lipid & Demir Paneli",
+      "accent": "cyan",
+      "icon": "Beaker"
+    }
+  },
+  "PARAMETER_CATALOG": {
+    "wbc": {
+      "label": "WBC (Lökosit)",
+      "short": "WBC",
+      "unit": "K/uL",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 0,
+      "ref": {
+        "min": 4.0,
+        "max": 10.5
+      },
+      "ocr": [
+        "\\bWBC\\b",
+        "\\bL[OÖ]KOS[Iİ]T\\b"
+      ],
+      "nutrition": {
+        "high": "wbc_high"
+      }
+    },
+    "rbc": {
+      "label": "RBC (Eritrosit)",
+      "short": "RBC",
+      "unit": "M/uL",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 1,
+      "ref": {
+        "min": 3.9,
+        "max": 5.5
+      },
+      "ocr": [
+        "\\bRBC\\b",
+        "\\bER[Iİ]TROS[Iİ]T\\b"
+      ],
+      "nutrition": {
+        "low": "hgb_low"
+      },
+      "ref_male": {
+        "min": 4.3,
+        "max": 5.9
+      },
+      "ref_female": {
+        "min": 3.9,
+        "max": 5.2
+      }
+    },
+    "hgb": {
+      "label": "HGB (Hemoglobin)",
+      "short": "HGB",
+      "unit": "g/dL",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 2,
+      "ref": {
+        "min": 12.0,
+        "max": 16.8
+      },
+      "ocr": [
+        "\\bHGB\\b",
+        "\\bHEMOGLOB[Iİ]N\\b"
+      ],
+      "nutrition": {
+        "low": "hgb_low"
+      },
+      "ref_male": {
+        "min": 13.0,
+        "max": 17.5
+      },
+      "ref_female": {
+        "min": 12.0,
+        "max": 16.0
+      }
+    },
+    "hct": {
+      "label": "HCT (Hematokrit)",
+      "short": "HCT",
+      "unit": "%",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 3,
+      "ref": {
+        "min": 36.2,
+        "max": 49.7
+      },
+      "ocr": [
+        "\\bHCT\\b",
+        "\\bHEMATOKR[Iİ]T\\b"
+      ],
+      "nutrition": {
+        "low": "hgb_low"
+      },
+      "ref_male": {
+        "min": 39.0,
+        "max": 50.0
+      },
+      "ref_female": {
+        "min": 36.0,
+        "max": 46.0
+      }
+    },
+    "mcv": {
+      "label": "MCV (Ortalama Eritrosit Hacmi)",
+      "short": "MCV",
+      "unit": "fL",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 4,
+      "ref": {
+        "min": 81.7,
+        "max": 99.6
+      },
+      "ocr": [
+        "\\bMCV\\b"
+      ],
+      "nutrition": {
+        "low": "mcv_low",
+        "high": "mcv_high"
+      }
+    },
+    "mch": {
+      "label": "MCH (Eritrosit Hemoglobin İçeriği)",
+      "short": "MCH",
+      "unit": "pg",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 5,
+      "ref": {
+        "min": 27.1,
+        "max": 33.8
+      },
+      "ocr": [
+        "\\bMCH\\b"
+      ],
+      "nutrition": {
+        "low": "mcv_low"
+      }
+    },
+    "mchc": {
+      "label": "MCHC (Ortalama Hemoglobin Konsantrasyonu)",
+      "short": "MCHC",
+      "unit": "g/dL",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 6,
+      "ref": {
+        "min": 32.2,
+        "max": 35.1
+      },
+      "ocr": [
+        "\\bMCHC\\b"
+      ],
+      "nutrition": {
+        "low": "mcv_low"
+      }
+    },
+    "plt": {
+      "label": "PLT (Trombosit)",
+      "short": "PLT",
+      "unit": "K/uL",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 7,
+      "ref": {
+        "min": 139,
+        "max": 345
+      },
+      "ocr": [
+        "\\bPLT\\b",
+        "\\bTROMBOS[Iİ]T\\b"
+      ],
+      "nutrition": {
+        "low": "plt_low",
+        "high": "plt_high"
+      }
+    },
+    "rdw": {
+      "label": "RDW (Eritrosit Dağılım Genişliği)",
+      "short": "RDW",
+      "unit": "%",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 8,
+      "ref": {
+        "min": 11.6,
+        "max": 16.0
+      },
+      "ocr": [
+        "\\bRDW\\b"
+      ],
+      "nutrition": {
+        "high": "hgb_low"
+      }
+    },
+    "pdw": {
+      "label": "PDW (Trombosit Dağılım Genişliği)",
+      "short": "PDW",
+      "unit": "fL",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 9,
+      "ref": {
+        "min": 9.0,
+        "max": 20.0
+      },
+      "ocr": [
+        "\\bPDW\\b"
+      ],
+      "nutrition": {},
+      "note": "Cihaza göre fL veya GSD/% olarak raporlanır; aralık geniş tutulmuştur."
+    },
+    "pct": {
+      "label": "PCT (Trombokrit)",
+      "short": "PCT",
+      "unit": "%",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 10,
+      "ref": {
+        "min": 0.1,
+        "max": 0.6
+      },
+      "ocr": [
+        "\\bPCT\\b"
+      ],
+      "nutrition": {},
+      "note": "Cihaza göre farklı ölçekte raporlanır; aralık geniş tutulmuştur."
+    },
+    "mpv": {
+      "label": "MPV (Ortalama Trombosit Hacmi)",
+      "short": "MPV",
+      "unit": "fL",
+      "domain": "Hematoloji",
+      "group": "hemogram",
+      "order": 11,
+      "ref": {
+        "min": 7.4,
+        "max": 11.0
+      },
+      "ocr": [
+        "\\bMPV\\b"
+      ],
+      "nutrition": {}
+    },
+    "neu_perc": {
+      "label": "Nötrofil Yüzdesi",
+      "short": "NEU%",
+      "unit": "%",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 12,
+      "ref": {
+        "min": 40,
+        "max": 66
+      },
+      "ocr": [
+        "\\bNEU\\s*%",
+        "\\bN[OÖ]TROF[Iİ]L\\s*%"
+      ],
+      "nutrition": {
+        "high": "wbc_high"
+      }
+    },
+    "neu": {
+      "label": "Nötrofil Mutlak Sayısı",
+      "short": "NEU#",
+      "unit": "K/uL",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 13,
+      "ref": {
+        "min": 2.0,
+        "max": 7.1
+      },
+      "ocr": [
+        "\\bNEU\\s*#",
+        "\\bNEU\\b",
+        "\\bN[OÖ]TROF[Iİ]L\\s*#"
+      ],
+      "nutrition": {
+        "high": "wbc_high",
+        "low": "neu_low"
+      }
+    },
+    "lym_perc": {
+      "label": "Lenfosit Yüzdesi",
+      "short": "LYM%",
+      "unit": "%",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 14,
+      "ref": {
+        "min": 25,
+        "max": 46
+      },
+      "ocr": [
+        "\\bLYM\\s*%",
+        "\\bLENFOS[Iİ]T\\s*%"
+      ],
+      "nutrition": {}
+    },
+    "lym": {
+      "label": "Lenfosit Mutlak Sayısı",
+      "short": "LYM#",
+      "unit": "K/uL",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 15,
+      "ref": {
+        "min": 0.9,
+        "max": 3.4
+      },
+      "ocr": [
+        "\\bLYM\\s*#",
+        "\\bLYM\\b",
+        "\\bLENFOS[Iİ]T\\s*#"
+      ],
+      "nutrition": {
+        "low": "neu_low"
+      }
+    },
+    "mono_perc": {
+      "label": "Monosit Yüzdesi",
+      "short": "MONO%",
+      "unit": "%",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 16,
+      "ref": {
+        "min": 2,
+        "max": 12
+      },
+      "ocr": [
+        "\\bMONO\\s*%",
+        "\\bMONOS[Iİ]T\\s*%"
+      ],
+      "nutrition": {}
+    },
+    "mono": {
+      "label": "Monosit Mutlak Sayısı",
+      "short": "MONO#",
+      "unit": "K/uL",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 17,
+      "ref": {
+        "min": 0.0,
+        "max": 1.2
+      },
+      "ocr": [
+        "\\bMONO\\s*#",
+        "\\bMONO\\b",
+        "\\bMONOS[Iİ]T\\s*#"
+      ],
+      "nutrition": {
+        "high": "crp_high"
+      }
+    },
+    "eos_perc": {
+      "label": "Eozinofil Yüzdesi",
+      "short": "EOS%",
+      "unit": "%",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 18,
+      "ref": {
+        "min": 0.0,
+        "max": 7
+      },
+      "ocr": [
+        "\\bEOS\\s*%",
+        "\\bEOZ[Iİ]NOF[Iİ]L\\s*%"
+      ],
+      "nutrition": {}
+    },
+    "eos": {
+      "label": "Eozinofil Mutlak Sayısı",
+      "short": "EOS#",
+      "unit": "K/uL",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 19,
+      "ref": {
+        "min": 0.0,
+        "max": 0.4
+      },
+      "ocr": [
+        "\\bEOS\\s*#",
+        "\\bEOS\\b",
+        "\\bEOZ[Iİ]NOF[Iİ]L\\s*#"
+      ],
+      "nutrition": {}
+    },
+    "baso_perc": {
+      "label": "Bazofil Yüzdesi",
+      "short": "BASO%",
+      "unit": "%",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 20,
+      "ref": {
+        "min": 0.0,
+        "max": 2.5
+      },
+      "ocr": [
+        "\\bBASO\\s*%",
+        "\\bBAZOF[Iİ]L\\s*%"
+      ],
+      "nutrition": {}
+    },
+    "baso": {
+      "label": "Bazofil Mutlak Sayısı",
+      "short": "BASO#",
+      "unit": "K/uL",
+      "domain": "İmmünoloji",
+      "group": "hemogram",
+      "order": 21,
+      "ref": {
+        "min": 0.0,
+        "max": 0.1
+      },
+      "ocr": [
+        "\\bBASO\\s*#",
+        "\\bBASO\\b",
+        "\\bBAZOF[Iİ]L\\s*#"
+      ],
+      "nutrition": {}
+    },
+    "ure": {
+      "label": "Üre",
+      "short": "ÜRE",
+      "unit": "mg/dL",
+      "domain": "Nefroloji",
+      "group": "biyokimya",
+      "order": 22,
+      "ref": {
+        "min": 17,
+        "max": 43
+      },
+      "ocr": [
+        "\\b[UÜ]RE\\b",
+        "\\bBUN\\b"
+      ],
+      "nutrition": {
+        "high": "ure_high"
+      }
+    },
+    "kreatinin": {
+      "label": "Kreatinin",
+      "short": "KREATİNİN",
+      "unit": "mg/dL",
+      "domain": "Nefroloji",
+      "group": "biyokimya",
+      "order": 23,
+      "ref": {
+        "min": 0.66,
+        "max": 1.09
+      },
+      "ocr": [
+        "\\bKREAT[Iİ]N[Iİ]N\\b",
+        "\\bCREATININE\\b"
+      ],
+      "nutrition": {
+        "high": "creatinine_high"
+      },
+      "ref_male": {
+        "min": 0.84,
+        "max": 1.25
+      },
+      "ref_female": {
+        "min": 0.66,
+        "max": 1.09
+      }
+    },
+    "ast": {
+      "label": "AST (SGOT)",
+      "short": "AST",
+      "unit": "U/L",
+      "domain": "Hepatoloji",
+      "group": "biyokimya",
+      "order": 24,
+      "ref": {
+        "min": 1.0,
+        "max": 50.0
+      },
+      "ocr": [
+        "\\bAST\\b",
+        "\\bSGOT\\b"
+      ],
+      "nutrition": {
+        "high": "ast_high"
+      },
+      "note": "Ust sinir raporlayan laboratuvarin araligiyla hizalandi. Bazi klinik kilavuzlar erkekte ~33-35 U/L gibi daha dar bir ust sinir onerir; hafif yukseklikler De Ritis ve FIB-4 indeksleriyle degerlendirilir."
+    },
+    "alt": {
+      "label": "ALT (SGPT)",
+      "short": "ALT",
+      "unit": "U/L",
+      "domain": "Hepatoloji",
+      "group": "biyokimya",
+      "order": 25,
+      "ref": {
+        "min": 1.0,
+        "max": 50.0
+      },
+      "ocr": [
+        "\\bALT\\b",
+        "\\bSGPT\\b"
+      ],
+      "nutrition": {
+        "high": "alt_high"
+      },
+      "note": "Ust sinir raporlayan laboratuvarin araligiyla hizalandi. Bazi klinik kilavuzlar erkekte ~33-35 U/L gibi daha dar bir ust sinir onerir; hafif yukseklikler De Ritis ve FIB-4 indeksleriyle degerlendirilir."
+    },
+    "ggt": {
+      "label": "GGT (Gama Glutamil Transferaz)",
+      "short": "GGT",
+      "unit": "U/L",
+      "domain": "Hepatoloji",
+      "group": "biyokimya",
+      "order": 26,
+      "ref": {
+        "min": 1,
+        "max": 55
+      },
+      "ocr": [
+        "\\bGGT\\b",
+        "\\bGAMA\\s*GLUTAM[Iİ]L\\b"
+      ],
+      "nutrition": {
+        "high": "ggt_high"
+      }
+    },
+    "alp": {
+      "label": "ALP (Alkalen Fosfataz)",
+      "short": "ALKALEN FOSFATAZ",
+      "unit": "U/L",
+      "domain": "Hepatoloji",
+      "group": "biyokimya",
+      "order": 27,
+      "ref": {
+        "min": 33,
+        "max": 98
+      },
+      "ocr": [
+        "\\bALKALEN\\s*FOSFATAZ\\b",
+        "\\bALP\\b"
+      ],
+      "nutrition": {
+        "high": "alp_high"
+      }
+    },
+    "ck": {
+      "label": "CK (Kreatin Kinaz)",
+      "short": "CK (KİNAZ)",
+      "unit": "U/L",
+      "domain": "Kas-İskelet",
+      "group": "biyokimya",
+      "order": 28,
+      "ref": {
+        "min": 26,
+        "max": 140
+      },
+      "ocr": [
+        "\\bCK\\b",
+        "\\bK[Iİ]NAZ\\b",
+        "\\bCREAT[Iİ]N\\s*K[Iİ]NAZ\\b"
+      ],
+      "nutrition": {
+        "high": "ck_high"
+      }
+    },
+    "urik_asit": {
+      "label": "Ürik Asit",
+      "short": "ÜRİK ASİT",
+      "unit": "mg/dL",
+      "domain": "Nefroloji",
+      "group": "biyokimya",
+      "order": 29,
+      "ref": {
+        "min": 2.6,
+        "max": 6.0
+      },
+      "ocr": [
+        "\\b[UÜ]R[Iİ]K\\s*AS[Iİ]T\\b"
+      ],
+      "nutrition": {
+        "high": "uric_acid_high"
+      },
+      "ref_male": {
+        "min": 3.4,
+        "max": 7.0
+      },
+      "ref_female": {
+        "min": 2.4,
+        "max": 6.0
+      }
+    },
+    "sodyum": {
+      "label": "Sodyum (Na)",
+      "short": "SODYUM",
+      "unit": "mmol/L",
+      "domain": "Elektrolit",
+      "group": "biyokimya",
+      "order": 30,
+      "ref": {
+        "min": 136,
+        "max": 145
+      },
+      "ocr": [
+        "\\bSODYUM\\b",
+        "\\bNA\\b"
+      ],
+      "nutrition": {
+        "low": "sodyum_low"
+      }
+    },
+    "potasyum": {
+      "label": "Potasyum (K)",
+      "short": "POTASYUM",
+      "unit": "mmol/L",
+      "domain": "Elektrolit",
+      "group": "biyokimya",
+      "order": 31,
+      "ref": {
+        "min": 3.5,
+        "max": 5.1
+      },
+      "ocr": [
+        "\\bPOTASYUM\\b"
+      ],
+      "nutrition": {
+        "low": "potasyum_low",
+        "high": "potasyum_high"
+      }
+    },
+    "fosfor": {
+      "label": "Fosfor (P)",
+      "short": "FOSFOR",
+      "unit": "mg/dL",
+      "domain": "Elektrolit",
+      "group": "biyokimya",
+      "order": 32,
+      "ref": {
+        "min": 2.5,
+        "max": 4.5
+      },
+      "ocr": [
+        "\\bFOSFOR\\b"
+      ],
+      "nutrition": {
+        "low": "fosfor_low"
+      }
+    },
+    "kalsiyum": {
+      "label": "Kalsiyum (Ca)",
+      "short": "KALSİYUM",
+      "unit": "mg/dL",
+      "domain": "Elektrolit",
+      "group": "biyokimya",
+      "order": 33,
+      "ref": {
+        "min": 8.5,
+        "max": 10.5
+      },
+      "ocr": [
+        "\\bKALS[Iİ]YUM\\b",
+        "\\bCA\\b"
+      ],
+      "nutrition": {
+        "low": "kalsiyum_low",
+        "high": "kalsiyum_high"
+      }
+    },
+    "tsh": {
+      "label": "TSH (Tiroid Stimülan Hormon)",
+      "short": "TSH",
+      "unit": "mIU/L",
+      "domain": "Endokrinoloji",
+      "group": "endokrin",
+      "order": 34,
+      "ref": {
+        "min": 0.38,
+        "max": 5.33
+      },
+      "ocr": [
+        "\\bTSH\\b"
+      ],
+      "nutrition": {
+        "high": "tsh_high",
+        "low": "tsh_low"
+      }
+    },
+    "ft4": {
+      "label": "Serbest T4 (Tiroksin)",
+      "short": "FREE T4",
+      "unit": "ng/dL",
+      "domain": "Endokrinoloji",
+      "group": "endokrin",
+      "order": 35,
+      "ref": {
+        "min": 0.61,
+        "max": 1.12
+      },
+      "ocr": [
+        "\\bFREE\\s*T4\\b",
+        "\\bSERBEST\\s*T4\\b",
+        "\\bFT4\\b"
+      ],
+      "nutrition": {
+        "low": "tsh_high",
+        "high": "tsh_low"
+      }
+    },
+    "ft3": {
+      "label": "Serbest T3 (Triiyodotironin)",
+      "short": "FREE T3",
+      "unit": "ng/L",
+      "domain": "Endokrinoloji",
+      "group": "endokrin",
+      "order": 36,
+      "ref": {
+        "min": 2.6,
+        "max": 4.37
+      },
+      "ocr": [
+        "\\bFREE\\s*T3\\b",
+        "\\bSERBEST\\s*T3\\b",
+        "\\bFT3\\b"
+      ],
+      "nutrition": {
+        "low": "tsh_high",
+        "high": "tsh_low"
+      }
+    },
+    "parathormon": {
+      "label": "Parathormon (PTH)",
+      "short": "PARATHORMON",
+      "unit": "ng/L",
+      "domain": "Endokrinoloji",
+      "group": "endokrin",
+      "order": 37,
+      "ref": {
+        "min": 12,
+        "max": 88
+      },
+      "ocr": [
+        "\\bPARATHORMON\\b",
+        "\\bPTH\\b"
+      ],
+      "nutrition": {
+        "high": "kalsiyum_high",
+        "low": "kalsiyum_low"
+      }
+    },
+    "ferritin": {
+      "label": "Ferritin",
+      "short": "FERRİTİN",
+      "unit": "ug/L",
+      "domain": "Hematoloji",
+      "group": "endokrin",
+      "order": 38,
+      "ref": {
+        "min": 11,
+        "max": 306.8
+      },
+      "ocr": [
+        "\\bFERR[Iİ]T[Iİ]N\\b"
+      ],
+      "nutrition": {
+        "low": "ferritin_low",
+        "high": "crp_high"
+      },
+      "ref_male": {
+        "min": 24.0,
+        "max": 336.0
+      },
+      "ref_female": {
+        "min": 11.0,
+        "max": 307.0
+      }
+    },
+    "vit_b12": {
+      "label": "Vitamin B12 (Kobalamin)",
+      "short": "VİTAMİN B12",
+      "unit": "ng/L",
+      "domain": "Hematoloji",
+      "group": "endokrin",
+      "order": 39,
+      "ref": {
+        "min": 145,
+        "max": 914
+      },
+      "ocr": [
+        "\\bV[Iİ]TAM[Iİ]N\\s*B12\\b",
+        "\\bB12\\b",
+        "\\bV[Iİ]T\\s*B12\\b"
+      ],
+      "nutrition": {
+        "low": "b12_low"
+      }
+    },
+    "folat": {
+      "label": "Folat (B9)",
+      "short": "FOLAT",
+      "unit": "ng/mL",
+      "domain": "Hematoloji",
+      "group": "endokrin",
+      "order": 40,
+      "ref": {
+        "min": 3.9,
+        "max": 26.8
+      },
+      "ocr": [
+        "\\bFOLAT\\b",
+        "\\bFOL[Iİ]K\\s*AS[Iİ]T\\b"
+      ],
+      "nutrition": {
+        "low": "folat_low"
+      }
+    },
+    "vit_d": {
+      "label": "25-OH Vitamin D",
+      "short": "VİTAMİN D",
+      "unit": "ng/mL",
+      "domain": "Endokrinoloji",
+      "group": "endokrin",
+      "order": 41,
+      "ref": {
+        "min": 30,
+        "max": 100
+      },
+      "ocr": [
+        "\\b25\\s*OH\\s*V[Iİ]TAM[Iİ]N\\s*D\\b",
+        "\\bV[Iİ]TAM[Iİ]N\\s*D\\b",
+        "\\bV[Iİ]T\\s*D\\b"
+      ],
+      "nutrition": {
+        "low": "vitamin_d_low"
+      }
+    },
+    "crp": {
+      "label": "CRP (C-Reaktif Protein)",
+      "short": "CRP",
+      "unit": "mg/L",
+      "domain": "İmmünoloji",
+      "group": "inflamasyon",
+      "order": 42,
+      "ref": {
+        "min": 0,
+        "max": 5
+      },
+      "ocr": [
+        "\\bCRP\\b",
+        "\\bC\\s*REAKT[Iİ]F\\b"
+      ],
+      "nutrition": {
+        "high": "crp_high"
+      }
+    },
+    "sedim": {
+      "label": "Sedimantasyon (ESR)",
+      "short": "SEDİM",
+      "unit": "mm/h",
+      "domain": "İmmünoloji",
+      "group": "inflamasyon",
+      "order": 43,
+      "ref": {
+        "min": 0,
+        "max": 20
+      },
+      "ocr": [
+        "\\bSED[Iİ]M\\b",
+        "\\bSED[Iİ]MANTASYON\\b",
+        "\\bESR\\b"
+      ],
+      "nutrition": {
+        "high": "crp_high"
+      }
+    },
+    "glukoz": {
+      "label": "Açlık Glukozu",
+      "short": "GLUKOZ",
+      "unit": "mg/dL",
+      "domain": "Endokrinoloji",
+      "group": "diyabet",
+      "order": 44,
+      "ref": {
+        "min": 70,
+        "max": 99
+      },
+      "ocr": [
+        "\\bGLUKOZ\\b",
+        "\\b[SŞ]EKER\\b",
+        "\\bGLUCOSE\\b"
+      ],
+      "nutrition": {
+        "high": "glukoz_high",
+        "low": "glukoz_low"
+      }
+    },
+    "hba1c": {
+      "label": "HbA1c (Glikozile Hemoglobin)",
+      "short": "HbA1C",
+      "unit": "%",
+      "domain": "Endokrinoloji",
+      "group": "diyabet",
+      "order": 45,
+      "ref": {
+        "min": 4.0,
+        "max": 5.6
+      },
+      "ocr": [
+        "\\bHBA1C\\b",
+        "\\bGL[Iİ]KOZ[Iİ]LE\\s*HEMOGLOB[Iİ]N\\b"
+      ],
+      "nutrition": {
+        "high": "hba1c_high"
+      }
+    },
+    "insulin": {
+      "label": "İnsülin (Açlık)",
+      "short": "İNSÜLİN",
+      "unit": "uIU/mL",
+      "domain": "Endokrinoloji",
+      "group": "diyabet",
+      "order": 46,
+      "ref": {
+        "min": 2.6,
+        "max": 24.9
+      },
+      "ocr": [
+        "\\b[Iİ]NS[UÜ]L[Iİ]N\\b"
+      ],
+      "nutrition": {
+        "high": "insulin_resistance"
+      }
+    },
+    "yassi_epitel": {
+      "label": "Yassı Epitel (İdrar)",
+      "short": "YASSI EPİTEL",
+      "unit": "HPF",
+      "domain": "Nefroloji",
+      "group": "diyabet",
+      "order": 47,
+      "ref": {
+        "min": 0,
+        "max": 5
+      },
+      "ocr": [
+        "\\bYASSI\\s*EP[Iİ]TEL\\b"
+      ],
+      "nutrition": {}
+    },
+    "yassi_olmayan_epitel": {
+      "label": "Yassı Olmayan Epitel (İdrar)",
+      "short": "YASSI OLMAYAN EPİTEL",
+      "unit": "HPF",
+      "domain": "Nefroloji",
+      "group": "diyabet",
+      "order": 48,
+      "ref": {
+        "min": 0,
+        "max": 1
+      },
+      "ocr": [
+        "\\bYASSI\\s*OLMAYAN\\s*EP[Iİ]TEL\\b"
+      ],
+      "nutrition": {}
+    },
+    "total_kolesterol": {
+      "label": "Total Kolesterol",
+      "short": "TOTAL KOLESTEROL",
+      "unit": "mg/dL",
+      "domain": "Kardiyovasküler",
+      "group": "lipid",
+      "order": 49,
+      "ref": {
+        "min": 100,
+        "max": 200
+      },
+      "ocr": [
+        "\\bTOTAL\\s*KOLESTEROL\\b",
+        "\\bKOLESTEROL\\b"
+      ],
+      "nutrition": {
+        "high": "kolesterol_high"
+      }
+    },
+    "ldl": {
+      "label": "LDL (Kötü) Kolesterol",
+      "short": "LDL KOLESTEROL",
+      "unit": "mg/dL",
+      "domain": "Kardiyovasküler",
+      "group": "lipid",
+      "order": 50,
+      "ref": {
+        "min": 1,
+        "max": 130
+      },
+      "ocr": [
+        "\\bLDL\\b"
+      ],
+      "nutrition": {
+        "high": "ldl_high"
+      }
+    },
+    "hdl": {
+      "label": "HDL (İyi) Kolesterol",
+      "short": "HDL KOLESTEROL",
+      "unit": "mg/dL",
+      "domain": "Kardiyovasküler",
+      "group": "lipid",
+      "order": 51,
+      "ref": {
+        "min": 40,
+        "max": 90
+      },
+      "ocr": [
+        "\\bHDL\\b"
+      ],
+      "nutrition": {
+        "low": "hdl_low"
+      }
+    },
+    "trigliserid": {
+      "label": "Trigliserid",
+      "short": "TRİGLİSERİD",
+      "unit": "mg/dL",
+      "domain": "Kardiyovasküler",
+      "group": "lipid",
+      "order": 52,
+      "ref": {
+        "min": 1,
+        "max": 150
+      },
+      "ocr": [
+        "\\bTR[Iİ]GL[Iİ]SER[Iİ]D\\b",
+        "\\bTG\\b"
+      ],
+      "nutrition": {
+        "high": "trigliserid_high"
+      }
+    },
+    "demir": {
+      "label": "Serum Demiri (Fe)",
+      "short": "DEMİR",
+      "unit": "ug/dL",
+      "domain": "Hematoloji",
+      "group": "lipid",
+      "order": 53,
+      "ref": {
+        "min": 37,
+        "max": 145
+      },
+      "ocr": [
+        "\\bDEM[Iİ]R\\b"
+      ],
+      "nutrition": {
+        "low": "ferritin_low"
+      },
+      "ref_male": {
+        "min": 65.0,
+        "max": 175.0
+      },
+      "ref_female": {
+        "min": 50.0,
+        "max": 170.0
+      }
+    },
+    "tibc": {
+      "label": "TIBC (Demir Bağlama Kapasitesi)",
+      "short": "DEMİR BAĞLAMA",
+      "unit": "ug/dL",
+      "domain": "Hematoloji",
+      "group": "lipid",
+      "order": 54,
+      "ref": {
+        "min": 118,
+        "max": 318
+      },
+      "ocr": [
+        "\\bDEM[Iİ]R\\s*BA[GĞ]LAMA\\b",
+        "\\bT[Iİ]BC\\b",
+        "\\bTIBC\\b"
+      ],
+      "nutrition": {
+        "high": "ferritin_low"
+      }
+    },
+    "albumin": {
+      "label": "Albümin",
+      "short": "ALBÜMİN",
+      "unit": "g/L",
+      "domain": "Hepatoloji",
+      "group": "biyokimya",
+      "ref": {
+        "min": 35.0,
+        "max": 52.0
+      },
+      "ocr": [
+        "\\bALB[UÜ]M[Iİ]N\\b",
+        "\\bALBUMIN\\b"
+      ],
+      "nutrition": {
+        "low": "albumin_low"
+      },
+      "order": 55
+    },
+    "total_bilirubin": {
+      "label": "Total Bilirubin",
+      "short": "TOTAL BİLİRUBİN",
+      "unit": "mg/dL",
+      "domain": "Hepatoloji",
+      "group": "biyokimya",
+      "ref": {
+        "min": 0.3,
+        "max": 1.2
+      },
+      "ocr": [
+        "\\bTOTAL\\s*B[Iİ]L[Iİ]RUB[Iİ]N\\b",
+        "\\bTOPLAM\\s*B[Iİ]L[Iİ]RUB[Iİ]N\\b"
+      ],
+      "nutrition": {
+        "high": "bilirubin_high"
+      },
+      "order": 56
+    },
+    "direkt_bilirubin": {
+      "label": "Direkt Bilirubin",
+      "short": "DİREKT BİLİRUBİN",
+      "unit": "mg/dL",
+      "domain": "Hepatoloji",
+      "group": "biyokimya",
+      "ref": {
+        "min": 0.0,
+        "max": 0.3
+      },
+      "ocr": [
+        "\\bD[Iİ]REKT\\s*B[Iİ]L[Iİ]RUB[Iİ]N\\b",
+        "\\bKONJUGE\\s*B[Iİ]L[Iİ]RUB[Iİ]N\\b"
+      ],
+      "nutrition": {
+        "high": "bilirubin_high"
+      },
+      "order": 57
+    },
+    "amilaz": {
+      "label": "Amilaz",
+      "short": "AMİLAZ",
+      "unit": "U/L",
+      "domain": "Gastroenteroloji",
+      "group": "biyokimya",
+      "ref": {
+        "min": 25.0,
+        "max": 96.0
+      },
+      "ocr": [
+        "\\bAM[Iİ]LAZ\\b",
+        "\\bAMYLASE\\b"
+      ],
+      "nutrition": {
+        "high": "pankreas_high"
+      },
+      "order": 58
+    },
+    "lipaz": {
+      "label": "Lipaz",
+      "short": "LİPAZ",
+      "unit": "U/L",
+      "domain": "Gastroenteroloji",
+      "group": "biyokimya",
+      "ref": {
+        "min": 1.0,
+        "max": 80.0
+      },
+      "ocr": [
+        "\\bL[Iİ]PAZ\\b",
+        "\\bLIPASE\\b"
+      ],
+      "nutrition": {
+        "high": "pankreas_high"
+      },
+      "order": 59
+    }
+  },
+  "CLINICAL_INDICES": {
+    "homa_ir": {
+      "label": "HOMA-IR",
+      "full_name": "Homeostatic Model Assessment — İnsülin Direnci",
+      "domain": "Endokrinoloji",
+      "requires": [
+        "glukoz",
+        "insulin"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "(Açlık glukozu × Açlık insülini) / 405",
+      "reference": "Matthews DR ve ark., Diabetologia 1985;28:412-9",
+      "unit": "",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 2.5,
+          "level": "normal",
+          "text": "İnsülin duyarlılığı normal aralıkta."
+        },
+        {
+          "max": 4.5,
+          "level": "borderline",
+          "text": "Sınırda insülin direnci; yaşam tarzı düzenlemesi önerilir."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "Belirgin insülin direnci; metabolik sendrom açısından değerlendirilmeli."
+        }
+      ],
+      "nutrition": {
+        "borderline": "insulin_resistance",
+        "high": "insulin_resistance"
+      }
+    },
+    "de_ritis": {
+      "label": "De Ritis Oranı",
+      "full_name": "AST / ALT Oranı — Karaciğer Hasar Paterni",
+      "domain": "Hepatoloji",
+      "requires": [
+        "ast",
+        "alt"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "AST / ALT",
+      "reference": "De Ritis F ve ark., Clin Chim Acta 1957;2:70-4",
+      "unit": "",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 1.0,
+          "level": "borderline",
+          "text": "AST/ALT < 1: viral hepatit veya non-alkolik yağlanma paterni."
+        },
+        {
+          "max": 2.0,
+          "level": "normal",
+          "text": "Ayırt edici bir hasar paterni göstermiyor."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "AST/ALT > 2: alkolik karaciğer hastalığı paterni ile uyumlu."
+        }
+      ],
+      "nutrition": {
+        "high": "ast_high"
+      },
+      "applicable_when": [
+        {
+          "parameter": "ast",
+          "state": "high"
+        }
+      ],
+      "modifiers": [
+        {
+          "when": [
+            {
+              "parameter": "ast",
+              "state": "high"
+            },
+            {
+              "parameter": "ggt",
+              "state": "normal"
+            }
+          ],
+          "level": "borderline",
+          "text": "AST/ALT > 2 ancak GGT normal — alkole bağlı karaciğer hasarı olası değil. AST iskelet kasında da bulunduğu için kas kaynaklı artış (yoğun egzersiz, travma, kreatin/protein takviyesi) öncelikli düşünülmelidir.",
+          "suggest_tests": [
+            "ck"
+          ]
+        }
+      ]
+    },
+    "fib4": {
+      "label": "FIB-4",
+      "full_name": "Fibrozis-4 İndeksi — Karaciğer Fibrozis Riski",
+      "domain": "Hepatoloji",
+      "requires": [
+        "ast",
+        "alt",
+        "plt"
+      ],
+      "needs_biometrics": [
+        "yas"
+      ],
+      "formula_text": "(Yaş × AST) / (Trombosit × √ALT)",
+      "reference": "Sterling RK ve ark., Hepatology 2006;43:1317-25",
+      "unit": "",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 1.3,
+          "level": "normal",
+          "text": "İleri fibrozis olasılığı düşük."
+        },
+        {
+          "max": 3.25,
+          "level": "borderline",
+          "text": "Belirsiz aralık; ileri tetkik gerekebilir."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "İleri fibrozis olasılığı yüksek; hepatoloji değerlendirmesi önerilir."
+        }
+      ],
+      "nutrition": {
+        "high": "alt_high"
+      },
+      "modifiers": [
+        {
+          "when": [
+            {
+              "biometric": "yas",
+              "max": 35
+            }
+          ],
+          "when_level": [
+            "borderline",
+            "high",
+            "critical"
+          ],
+          "level": "borderline",
+          "text": "FIB-4 orta-ileri yaşta, kronik karaciğer hastalığı olan popülasyonda doğrulanmıştır; 35 yaş altında güvenilir değildir. Akut transaminaz yüksekliğinde formüldeki AST terimi indeksi yapay olarak yükseltir — bu sonuç fibrozis göstergesi olarak yorumlanmamalıdır."
+        }
+      ]
+    },
+    "mentzer": {
+      "label": "Mentzer İndeksi",
+      "full_name": "MCV / RBC — Talasemi ve Demir Eksikliği Ayrımı",
+      "domain": "Hematoloji",
+      "requires": [
+        "mcv",
+        "rbc"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "MCV / RBC",
+      "reference": "Mentzer WC, Lancet 1973;1:882",
+      "unit": "",
+      "decimals": 1,
+      "bands": [
+        {
+          "max": 13.0,
+          "level": "borderline",
+          "text": "Mikrositoz varlığında < 13: talasemi taşıyıcılığı lehine (eritrosit sayısı korunmuş)."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "Mikrositoz varlığında > 13: demir eksikliği anemisi lehine."
+        }
+      ],
+      "nutrition": {
+        "high": "ferritin_low"
+      },
+      "applicable_when": [
+        {
+          "parameter": "mcv",
+          "state": "low"
+        }
+      ],
+      "suggest_tests": {
+        "borderline": [
+          "hemoglobin elektroforezi"
+        ]
+      }
+    },
+    "transferrin_sat": {
+      "label": "Transferrin Satürasyonu",
+      "full_name": "Serum Demiri / TIBC — Demir Doygunluğu",
+      "domain": "Hematoloji",
+      "requires": [
+        "demir",
+        "tibc"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "(Serum demiri / TIBC) × 100",
+      "reference": "Kasvosve I, Delanghe J, Clin Chem Lab Med 2002;40:1014-8",
+      "unit": "%",
+      "decimals": 1,
+      "bands": [
+        {
+          "max": 16.0,
+          "level": "high",
+          "text": "< %16: demir eksikliği; depolar tükenmiş."
+        },
+        {
+          "max": 45.0,
+          "level": "normal",
+          "text": "Demir doygunluğu normal aralıkta."
+        },
+        {
+          "max": null,
+          "level": "critical",
+          "text": "> %45: demir yüklenmesi; hemokromatoz açısından değerlendirilmeli."
+        }
+      ],
+      "nutrition": {
+        "high": "ferritin_low"
+      },
+      "suggest_tests": {
+        "critical": [
+          "ferritin"
+        ],
+        "high": [
+          "ferritin"
+        ]
+      }
+    },
+    "egfr": {
+      "label": "eGFR (CKD-EPI 2021)",
+      "full_name": "Tahmini Glomerüler Filtrasyon Hızı",
+      "domain": "Nefroloji",
+      "requires": [
+        "kreatinin"
+      ],
+      "needs_biometrics": [
+        "yas",
+        "cinsiyet"
+      ],
+      "formula_text": "142 × min(Kr/κ,1)^α × max(Kr/κ,1)^-1.200 × 0.9938^Yaş × 1.012 (kadın)",
+      "reference": "Inker LA ve ark., N Engl J Med 2021;385:1737-49",
+      "unit": "mL/dk/1.73m²",
+      "decimals": 0,
+      "bands": [
+        {
+          "max": 15.0,
+          "level": "critical",
+          "text": "Evre 5: böbrek yetmezliği; renal replasman tedavisi değerlendirilmeli."
+        },
+        {
+          "max": 30.0,
+          "level": "critical",
+          "text": "Evre 4: ciddi GFR azalması."
+        },
+        {
+          "max": 60.0,
+          "level": "high",
+          "text": "Evre 3: orta derecede GFR azalması; kronik böbrek hastalığı."
+        },
+        {
+          "max": 90.0,
+          "level": "borderline",
+          "text": "Evre 2: hafif GFR azalması."
+        },
+        {
+          "max": null,
+          "level": "normal",
+          "text": "Evre 1: böbrek filtrasyon fonksiyonu normal."
+        }
+      ],
+      "nutrition": {
+        "critical": "creatinine_high",
+        "high": "creatinine_high"
+      },
+      "modifiers": [
+        {
+          "when": [
+            {
+              "parameter": "kreatinin",
+              "state": "high"
+            },
+            {
+              "biometric": "yas",
+              "max": 40
+            }
+          ],
+          "when_level": [
+            "borderline",
+            "high",
+            "critical"
+          ],
+          "level": "borderline",
+          "text": "Kreatinin temelli eGFR, yüksek kas kütlesinde gerçek filtrasyon hızını düşük tahmin eder. Genç ve kaslı bireylerde ya da kreatin takviyesi kullananlarda bu sonuç tek başına böbrek hastalığı anlamına gelmez.",
+          "suggest_tests": [
+            "sistatin C (kas kütlesinden bağımsız GFR)"
+          ]
+        }
+      ]
+    },
+    "bun_kreatinin": {
+      "label": "BUN / Kreatinin Oranı",
+      "full_name": "Prerenal ve Renal Azotemi Ayrımı",
+      "domain": "Nefroloji",
+      "requires": [
+        "ure",
+        "kreatinin"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "(Üre × 0.467) / Kreatinin",
+      "reference": "Uchino S ve ark., Intensive Care Med 2012;38:420-8",
+      "unit": "",
+      "decimals": 1,
+      "bands": [
+        {
+          "max": 10.0,
+          "level": "borderline",
+          "text": "< 10: intrensek renal patoloji lehine."
+        },
+        {
+          "max": 20.0,
+          "level": "normal",
+          "text": "Normal aralıkta."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "> 20: prerenal azotemi (dehidratasyon, hipoperfüzyon) lehine."
+        }
+      ],
+      "nutrition": {
+        "high": "ure_high"
+      },
+      "modifiers": [
+        {
+          "when": [
+            {
+              "parameter": "kreatinin",
+              "state": "normal"
+            },
+            {
+              "parameter": "ure",
+              "state": "normal"
+            }
+          ],
+          "level": "normal",
+          "text": "Oran düşük olmakla birlikte kreatinin ve üre normal sınırlardadır. Bu tabloda düşük oran böbrek patolojisi göstermez; düşük protein alımı, yüksek sıvı alımı veya karaciğerde üre sentezinin azalması gibi iyi huylu nedenlerle görülebilir."
+        }
+      ]
+    },
+    "nlr": {
+      "label": "NLR",
+      "full_name": "Nötrofil / Lenfosit Oranı — Sistemik İnflamasyon",
+      "domain": "İmmünoloji",
+      "requires": [
+        "neu",
+        "lym"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "Nötrofil mutlak sayısı / Lenfosit mutlak sayısı",
+      "reference": "Zahorec R, Bratisl Lek Listy 2001;102:5-14",
+      "unit": "",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 3.0,
+          "level": "normal",
+          "text": "Sistemik inflamatuar yük düşük."
+        },
+        {
+          "max": 6.0,
+          "level": "borderline",
+          "text": "Orta düzeyde inflamatuar yanıt."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "Belirgin inflamatuar yanıt; akut enfeksiyon veya stres yanıtı."
+        }
+      ],
+      "nutrition": {
+        "borderline": "crp_high",
+        "high": "crp_high"
+      }
+    },
+    "tg_hdl": {
+      "label": "TG / HDL Oranı",
+      "full_name": "Trigliserid / HDL — Aterojenik Metabolik Risk",
+      "domain": "Kardiyovasküler",
+      "requires": [
+        "trigliserid",
+        "hdl"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "Trigliserid / HDL kolesterol",
+      "reference": "Gaziano JM ve ark., Circulation 1997;96:2520-5",
+      "unit": "",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 2.5,
+          "level": "normal",
+          "text": "Aterojenik risk düşük."
+        },
+        {
+          "max": 3.5,
+          "level": "borderline",
+          "text": "Sınırda aterojenik lipid paterni; insülin direnci açısından değerlendirilebilir."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "Yüksek aterojenik risk; küçük yoğun LDL baskınlığı beklenir."
+        }
+      ],
+      "nutrition": {
+        "high": "trigliserid_high"
+      }
+    },
+    "non_hdl": {
+      "label": "Non-HDL Kolesterol",
+      "full_name": "Total Kolesterol − HDL — Aterojenik Lipoprotein Yükü",
+      "domain": "Kardiyovasküler",
+      "requires": [
+        "total_kolesterol",
+        "hdl"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "Total kolesterol − HDL kolesterol",
+      "reference": "Grundy SM ve ark., Circulation 2019;139:e1082-143",
+      "unit": "mg/dL",
+      "decimals": 0,
+      "bands": [
+        {
+          "max": 130.0,
+          "level": "normal",
+          "text": "Aterojenik lipoprotein yükü hedef aralıkta."
+        },
+        {
+          "max": 160.0,
+          "level": "borderline",
+          "text": "Sınırda yüksek; diyet düzenlemesi önerilir."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "Yüksek aterojenik yük; kardiyovasküler risk artmış."
+        }
+      ],
+      "nutrition": {
+        "high": "kolesterol_high"
+      }
+    },
+    "ca_p_product": {
+      "label": "Ca × P Çarpımı",
+      "full_name": "Kalsiyum × Fosfor — Metastatik Kalsifikasyon Riski",
+      "domain": "Elektrolit",
+      "requires": [
+        "kalsiyum",
+        "fosfor"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "Kalsiyum × Fosfor",
+      "reference": "Block GA ve ark., Am J Kidney Dis 1998;31:607-17",
+      "unit": "mg²/dL²",
+      "decimals": 1,
+      "bands": [
+        {
+          "max": 55.0,
+          "level": "normal",
+          "text": "Mineral-kemik dengesi hedef aralıkta."
+        },
+        {
+          "max": 70.0,
+          "level": "borderline",
+          "text": "Sınırda; kalsiyum-fosfor dengesi izlenmeli."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "> 55-70: yumuşak doku ve vasküler kalsifikasyon riski artmış."
+        }
+      ],
+      "nutrition": {
+        "borderline": "fosfor_low",
+        "high": "kalsiyum_high"
+      }
+    },
+    "osmolarite": {
+      "label": "Serum Ozmolaritesi",
+      "full_name": "Hesaplanan Serum Ozmolaritesi — Sıvı-Elektrolit Dengesi",
+      "domain": "Elektrolit",
+      "requires": [
+        "sodyum",
+        "glukoz",
+        "ure"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "2 × Sodyum + Glukoz/18 + (Üre × 0.467)/2.8",
+      "reference": "Bhagat CI ve ark., Lancet 1984;2:157",
+      "unit": "mOsm/kg",
+      "decimals": 1,
+      "bands": [
+        {
+          "max": 275.0,
+          "level": "high",
+          "text": "< 275: hipoozmolar durum; hiponatremi ve serebral ödem riski."
+        },
+        {
+          "max": 295.0,
+          "level": "normal",
+          "text": "Serum ozmolaritesi normal aralıkta."
+        },
+        {
+          "max": 320.0,
+          "level": "high",
+          "text": "> 295: hiperozmolar durum; dehidratasyon veya hiperglisemi."
+        },
+        {
+          "max": null,
+          "level": "critical",
+          "text": "> 320: ciddi hiperozmolarite; acil değerlendirme gerekir."
+        }
+      ],
+      "nutrition": {
+        "high": "sodyum_low"
+      }
+    },
+    "plr": {
+      "label": "PLR",
+      "full_name": "Trombosit / Lenfosit Oranı — İnflamatuar ve Hematolojik Denge",
+      "domain": "İmmünoloji",
+      "requires": [
+        "plt",
+        "lym"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "Trombosit sayısı / Lenfosit mutlak sayısı",
+      "reference": "Gasparyan AY ve ark., Ann Lab Med 2019;39:345-57",
+      "unit": "",
+      "decimals": 1,
+      "bands": [
+        {
+          "max": 50.0,
+          "level": "high",
+          "text": "< 50: belirgin trombositopeni veya lenfositoz lehine."
+        },
+        {
+          "max": 250.0,
+          "level": "normal",
+          "text": "Trombosit-lenfosit dengesi normal aralıkta."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "> 250: inflamatuar yanıt veya reaktif trombositoz lehine."
+        }
+      ],
+      "nutrition": {
+        "high": "crp_high"
+      }
+    },
+    "duzeltilmis_kalsiyum": {
+      "label": "Düzeltilmiş Kalsiyum",
+      "full_name": "Albümine Göre Düzeltilmiş Serum Kalsiyumu",
+      "domain": "Elektrolit",
+      "requires": [
+        "kalsiyum",
+        "albumin"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "Kalsiyum + 0.02 × (40 − Albümin g/L)",
+      "reference": "Payne RB ve ark., Br Med J 1973;4:643-6",
+      "unit": " mg/dL",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 8.5,
+          "level": "high",
+          "text": "Düzeltilmiş kalsiyum düşük; hipokalsemi açısından değerlendirilmeli."
+        },
+        {
+          "max": 10.5,
+          "level": "normal",
+          "text": "Albümine göre düzeltilmiş kalsiyum normal aralıkta."
+        },
+        {
+          "max": null,
+          "level": "critical",
+          "text": "Düzeltilmiş kalsiyum yüksek; hiperparatiroidi ve malignite ayırıcı tanıda yer almalıdır."
+        }
+      ],
+      "nutrition": {
+        "critical": "kalsiyum_high",
+        "high": "kalsiyum_low"
+      },
+      "modifiers": [
+        {
+          "when": [
+            {
+              "parameter": "albumin",
+              "state": "normal"
+            }
+          ],
+          "level": "normal",
+          "text": "Albümin normal olduğu için düzeltme ölçülen kalsiyumu anlamlı biçimde değiştirmez; ölçülen değer geçerlidir."
+        }
+      ]
+    },
+    "lipaz_amilaz": {
+      "label": "Lipaz / Amilaz Oranı",
+      "full_name": "Pankreatit Etiyolojisi Ayrımı",
+      "domain": "Gastroenteroloji",
+      "requires": [
+        "lipaz",
+        "amilaz"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "Lipaz / Amilaz",
+      "reference": "Gumaste VV ve ark., Gastroenterology 1991;101:1361-6",
+      "unit": "",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 2.0,
+          "level": "normal",
+          "text": "Oran, pankreatit için ayırt edici bir patern göstermiyor."
+        },
+        {
+          "max": null,
+          "level": "borderline",
+          "text": "Lipaz/Amilaz > 2: alkole bağlı pankreatit lehine yorumlanır."
+        }
+      ],
+      "applicable_when": [
+        {
+          "parameter": "lipaz",
+          "state": "high"
+        }
+      ],
+      "nutrition": {
+        "borderline": "pankreas_high"
+      }
+    },
+    "de_ritis_bilirubin": {
+      "label": "Kolestaz Paterni",
+      "full_name": "ALP + GGT + Bilirubin Birlikteliği",
+      "domain": "Hepatoloji",
+      "requires": [
+        "alp",
+        "ggt",
+        "total_bilirubin"
+      ],
+      "needs_biometrics": [],
+      "formula_text": "(ALP / ALP_üst) × (GGT / GGT_üst) — bilirubin eşliğinde",
+      "reference": "EASL Clinical Practice Guidelines, J Hepatol 2009;51:237-67",
+      "unit": "",
+      "decimals": 2,
+      "bands": [
+        {
+          "max": 1.0,
+          "level": "normal",
+          "text": "Kolestatik enzim paterni saptanmadı."
+        },
+        {
+          "max": 2.0,
+          "level": "borderline",
+          "text": "Hafif kolestatik eğilim; klinik bağlamla değerlendirilmeli."
+        },
+        {
+          "max": null,
+          "level": "high",
+          "text": "Belirgin kolestatik patern; safra akımı obstrüksiyonu ayırıcı tanıda yer almalıdır."
+        }
+      ],
+      "applicable_when": [
+        {
+          "parameter": "alp",
+          "state": "high"
+        }
+      ],
+      "nutrition": {
+        "high": "alp_high",
+        "borderline": "alp_high"
+      }
+    }
   },
   "CLINICAL_DICTIONARY": {
     "şeker": "Tip-2 Diyabet / Glukoz İntoleransı Yükü",
@@ -139,142 +2022,971 @@
   },
   "BIO_NUTRITION_DB": {
     "hgb_low": {
-      "compounds": ["Heme-Demir", "Askorbik Asit (Vit C)", "Folik Asit", "B12 Vitamini", "Bakır", "Lizin"],
-      "foods": ["Kuzu Ciğeri", "Yağsız Kırmızı Et", "Pancar Suyu", "Koyu Yeşil Yapraklı Sebzeler", "Pekmez", "Yumurta Sarısı", "Mercimek", "Kuru Üzüm"],
+      "compounds": [
+        "Heme-Demir",
+        "Askorbik Asit (Vit C)",
+        "Folik Asit",
+        "B12 Vitamini",
+        "Bakır",
+        "Lizin"
+      ],
+      "foods": [
+        "Kuzu Ciğeri",
+        "Yağsız Kırmızı Et",
+        "Pancar Suyu",
+        "Koyu Yeşil Yapraklı Sebzeler",
+        "Pekmez",
+        "Yumurta Sarısı",
+        "Mercimek",
+        "Kuru Üzüm"
+      ],
       "synergy": "Demir biyoyararlanımını artırmak için C vitamini kaynakları ile aynı öğünde tüketim önerilir.",
-      "inhibitors": ["Tanin içeren siyah çay", "Fitat içeren tahıllar", "Yüksek kalsiyum (süt ürünleri)", "Aşırı kahve tüketimi"]
+      "inhibitors": [
+        "Tanin içeren siyah çay",
+        "Fitat içeren tahıllar",
+        "Yüksek kalsiyum (süt ürünleri)",
+        "Aşırı kahve tüketimi"
+      ]
     },
     "ferritin_low": {
-      "compounds": ["Heme Demir", "Laktoferrin", "Askorbik Asit", "Bakır"],
-      "foods": ["Dana Eti", "Kuzu Ciğeri", "Susam", "Kuru Kayısı", "Kara Üzüm", "Ispanak"],
+      "compounds": [
+        "Heme Demir",
+        "Laktoferrin",
+        "Askorbik Asit",
+        "Bakır"
+      ],
+      "foods": [
+        "Dana Eti",
+        "Kuzu Ciğeri",
+        "Susam",
+        "Kuru Kayısı",
+        "Kara Üzüm",
+        "Ispanak"
+      ],
       "synergy": "Demir depolarının dolması için ferritin destekleyici gıdalar protein and C vitamini ile birlikte alınmalıdır.",
-      "inhibitors": ["Kalsiyum fazlalığı", "Çay", "Fitik asit", "İşlenmiş tahıllar"]
+      "inhibitors": [
+        "Kalsiyum fazlalığı",
+        "Çay",
+        "Fitik asit",
+        "İşlenmiş tahıllar"
+      ]
     },
     "b12_low": {
-      "compounds": ["Metilkobalamin", "Folat", "B6 Vitamini", "Kobalt"],
-      "foods": ["Yumurta", "Somon", "Kırmızı Et", "Süt", "Peynir", "Karides"],
+      "compounds": [
+        "Metilkobalamin",
+        "Folat",
+        "B6 Vitamini",
+        "Kobalt"
+      ],
+      "foods": [
+        "Yumurta",
+        "Somon",
+        "Kırmızı Et",
+        "Süt",
+        "Peynir",
+        "Karides"
+      ],
       "synergy": "B12 metabolizması için mide asidi yeterliliği ve intrinsic factor aktivitesi önemlidir.",
-      "inhibitors": ["Aşırı alkol", "Uzun süreli antasit kullanımı", "İşlenmiş vegan ürünler"]
+      "inhibitors": [
+        "Aşırı alkol",
+        "Uzun süreli antasit kullanımı",
+        "İşlenmiş vegan ürünler"
+      ]
     },
     "folat_low": {
-      "compounds": ["Folik Asit", "B6", "B12", "Magnezyum"],
-      "foods": ["Ispanak", "Brokoli", "Kuşkonmaz", "Nohut", "Avokado"],
+      "compounds": [
+        "Folik Asit",
+        "B6",
+        "B12",
+        "Magnezyum"
+      ],
+      "foods": [
+        "Ispanak",
+        "Brokoli",
+        "Kuşkonmaz",
+        "Nohut",
+        "Avokado"
+      ],
       "synergy": "Metilasyon döngüsü için folat ve B12 birlikte optimize edilmelidir.",
-      "inhibitors": ["Alkol", "Aşırı rafine karbonhidrat", "Uzun süreli düşük sebze tüketimi"]
+      "inhibitors": [
+        "Alkol",
+        "Aşırı rafine karbonhidrat",
+        "Uzun süreli düşük sebze tüketimi"
+      ]
     },
     "glukoz_high": {
-      "compounds": ["Resistans Nişasta", "Çözünebilir Lif (Pektin)", "Krom", "Polifenoller", "Alfa Lipoik Asit"],
-      "foods": ["Siyah Fasulye", "Yulaf Kepeği", "Yeşil Mercimek", "Tarçın", "Çörek Otu", "Elma Sirkesi", "Brokoli"],
+      "compounds": [
+        "Resistans Nişasta",
+        "Çözünebilir Lif (Pektin)",
+        "Krom",
+        "Polifenoller",
+        "Alfa Lipoik Asit"
+      ],
+      "foods": [
+        "Siyah Fasulye",
+        "Yulaf Kepeği",
+        "Yeşil Mercimek",
+        "Tarçın",
+        "Çörek Otu",
+        "Elma Sirkesi",
+        "Brokoli"
+      ],
       "synergy": "Öğünlerde sirke kullanımı postprandiyal glukoz yanıtını baskılamaya yardımcı olabilir.",
-      "inhibitors": ["Rafine unlu mamuller", "Fruktoz şurubu", "Yüksek glisemik indeksli meyveler", "Şekerli içecekler"]
+      "inhibitors": [
+        "Rafine unlu mamuller",
+        "Fruktoz şurubu",
+        "Yüksek glisemik indeksli meyveler",
+        "Şekerli içecekler"
+      ]
     },
     "hba1c_high": {
-      "compounds": ["Berberin", "Krom Pikolinat", "Myo-Inositol", "Magnezyum"],
-      "foods": ["Yulaf", "Baklagiller", "Tarçın", "Ceviz", "Avokado", "Semizotu"],
+      "compounds": [
+        "Berberin",
+        "Krom Pikolinat",
+        "Myo-Inositol",
+        "Magnezyum"
+      ],
+      "foods": [
+        "Yulaf",
+        "Baklagiller",
+        "Tarçın",
+        "Ceviz",
+        "Avokado",
+        "Semizotu"
+      ],
       "synergy": "Düşük glisemik indeksli beslenme ve düzenli fiziksel aktivite HbA1c düşüşünü destekler.",
-      "inhibitors": ["Gece geç saat öğünleri", "Şekerli kahvaltılıklar", "Beyaz ekmek"]
+      "inhibitors": [
+        "Gece geç saat öğünleri",
+        "Şekerli kahvaltılıklar",
+        "Beyaz ekmek"
+      ]
     },
     "insulin_resistance": {
-      "compounds": ["Magnezyum", "Krom", "Omega-3", "Koenzim Q10"],
-      "foods": ["Badem", "Kabak Çekirdeği", "Somon", "Yumurta", "Yeşil Sebzeler"],
+      "compounds": [
+        "Magnezyum",
+        "Krom",
+        "Omega-3",
+        "Koenzim Q10"
+      ],
+      "foods": [
+        "Badem",
+        "Kabak Çekirdeği",
+        "Somon",
+        "Yumurta",
+        "Yeşil Sebzeler"
+      ],
       "synergy": "Protein ve liften zengin kahvaltılar insülin yanıtını stabilize etmeye yardımcı olur.",
-      "inhibitors": ["Trans yağlar", "Şekerli içecekler", "Ultra işlenmiş gıdalar"]
+      "inhibitors": [
+        "Trans yağlar",
+        "Şekerli içecekler",
+        "Ultra işlenmiş gıdalar"
+      ]
     },
     "crp_high": {
-      "compounds": ["Antosiyaninler", "Omega-3 (EPA/DHA)", "Kurkuminoidler", "Resveratrol"],
-      "foods": ["Yaban Mersini", "Vişne Suyu", "Keten Tohumu", "Soğuk Sıkım Zeytinyağı", "Zencefil", "Nar"],
+      "compounds": [
+        "Antosiyaninler",
+        "Omega-3 (EPA/DHA)",
+        "Kurkuminoidler",
+        "Resveratrol"
+      ],
+      "foods": [
+        "Yaban Mersini",
+        "Vişne Suyu",
+        "Keten Tohumu",
+        "Soğuk Sıkım Zeytinyağı",
+        "Zencefil",
+        "Nar"
+      ],
       "synergy": "Kurkuminin biyoyararlanımı için karabiber ve sağlıklı yağlarla kombinasyonu önerilir.",
-      "inhibitors": ["Trans yağ asitleri", "Rafine şeker", "Aşırı alkol", "İşlenmiş et ürünleri"]
+      "inhibitors": [
+        "Trans yağ asitleri",
+        "Rafine şeker",
+        "Aşırı alkol",
+        "İşlenmiş et ürünleri"
+      ]
     },
     "wbc_high": {
-      "compounds": ["Çinko", "Selenyum", "Quercetin", "C Vitamini"],
-      "foods": ["Sarımsak", "Soğan", "Brokoli", "Narenciye", "Kefir"],
+      "compounds": [
+        "Çinko",
+        "Selenyum",
+        "Quercetin",
+        "C Vitamini"
+      ],
+      "foods": [
+        "Sarımsak",
+        "Soğan",
+        "Brokoli",
+        "Narenciye",
+        "Kefir"
+      ],
       "synergy": "Probiyotik ve antioksidan kombinasyonları immün modülasyona katkı sağlayabilir.",
-      "inhibitors": ["Sigara", "Uyku eksikliği", "Aşırı rafine şeker"]
+      "inhibitors": [
+        "Sigara",
+        "Uyku eksikliği",
+        "Aşırı rafine şeker"
+      ]
     },
     "vitamin_d_low": {
-      "compounds": ["Vitamin D3", "K2 Vitamini", "Magnezyum", "Çinko"],
-      "foods": ["Yumurta Sarısı", "Somon", "Sardalya", "Tereyağı", "Mantar"],
+      "compounds": [
+        "Vitamin D3",
+        "K2 Vitamini",
+        "Magnezyum",
+        "Çinko"
+      ],
+      "foods": [
+        "Yumurta Sarısı",
+        "Somon",
+        "Sardalya",
+        "Tereyağı",
+        "Mantar"
+      ],
       "synergy": "Vitamin D emilimi için yağ içeren öğünlerle tüketim önerilir.",
-      "inhibitors": ["Aşırı sedanter yaşam", "Yetersiz güneş maruziyeti", "Ultra işlenmiş gıdalar"]
+      "inhibitors": [
+        "Aşırı sedanter yaşam",
+        "Yetersiz güneş maruziyeti",
+        "Ultra işlenmiş gıdalar"
+      ]
     },
     "alt_high": {
-      "compounds": ["Silimarin", "Kolin", "L-Glutatyon Öncülleri", "N-Asetilsistein"],
-      "foods": ["Enginar", "Deve Dikeni", "Turp", "Brokoli Filizi", "Kuşkonmaz", "Lahana"],
+      "compounds": [
+        "Silimarin",
+        "Kolin",
+        "L-Glutatyon Öncülleri",
+        "N-Asetilsistein"
+      ],
+      "foods": [
+        "Enginar",
+        "Deve Dikeni",
+        "Turp",
+        "Brokoli Filizi",
+        "Kuşkonmaz",
+        "Lahana"
+      ],
       "synergy": "Sülfürlü bileşikler hepatik faz-2 detoksifikasyon yollarını destekleyebilir.",
-      "inhibitors": ["Fruktoz şurubu", "Doymuş hayvansal yağlar", "Alkol", "Toksik ilaç yükü"]
+      "inhibitors": [
+        "Fruktoz şurubu",
+        "Doymuş hayvansal yağlar",
+        "Alkol",
+        "Toksik ilaç yükü"
+      ]
     },
     "ast_high": {
-      "compounds": ["Koenzim Q10", "Alfa Lipoik Asit", "Glutatyon"],
-      "foods": ["Ispanak", "Avokado", "Ceviz", "Brokoli", "Pancar"],
+      "compounds": [
+        "Koenzim Q10",
+        "Alfa Lipoik Asit",
+        "Glutatyon"
+      ],
+      "foods": [
+        "Ispanak",
+        "Avokado",
+        "Ceviz",
+        "Brokoli",
+        "Pancar"
+      ],
       "synergy": "Antioksidan yoğun beslenme oksidatif hepatik yükü azaltmaya yardımcı olabilir.",
-      "inhibitors": ["Aşırı alkol", "Kızartmalar", "Şekerli içecekler"]
+      "inhibitors": [
+        "Aşırı alkol",
+        "Kızartmalar",
+        "Şekerli içecekler"
+      ]
     },
     "ggt_high": {
-      "compounds": ["Sülfürlü Antioksidanlar", "Glutatyon", "Selenyum"],
-      "foods": ["Sarımsak", "Soğan", "Brokoli", "Lahana", "Karnabahar"],
+      "compounds": [
+        "Sülfürlü Antioksidanlar",
+        "Glutatyon",
+        "Selenyum"
+      ],
+      "foods": [
+        "Sarımsak",
+        "Soğan",
+        "Brokoli",
+        "Lahana",
+        "Karnabahar"
+      ],
       "synergy": "Cruciferous sebzeler glutatyon metabolizmasını destekleyebilir.",
-      "inhibitors": ["Alkol", "Sigara", "Trans yağlar"]
+      "inhibitors": [
+        "Alkol",
+        "Sigara",
+        "Trans yağlar"
+      ]
     },
     "trigliserid_high": {
-      "compounds": ["EPA", "DHA", "Niasin", "Beta-Sitosterol"],
-      "foods": ["Uskumru", "Ceviz", "Semizotu", "Sarımsak", "Yeşil Çay", "Chia Tohumu"],
+      "compounds": [
+        "EPA",
+        "DHA",
+        "Niasin",
+        "Beta-Sitosterol"
+      ],
+      "foods": [
+        "Uskumru",
+        "Ceviz",
+        "Semizotu",
+        "Sarımsak",
+        "Yeşil Çay",
+        "Chia Tohumu"
+      ],
       "synergy": "Omega-3 yağ asitleri VLDL sentezini baskılayarak trigliserid kontrolüne katkı sağlayabilir.",
-      "inhibitors": ["Basit karbonhidratlar", "Bira", "Şekerli tatlılar"]
+      "inhibitors": [
+        "Basit karbonhidratlar",
+        "Bira",
+        "Şekerli tatlılar"
+      ]
     },
     "ldl_high": {
-      "compounds": ["Fitosteroller", "Beta-Glukan", "Omega-3", "Polifenoller"],
-      "foods": ["Yulaf", "Badem", "Avokado", "Zeytinyağı", "Keten Tohumu"],
+      "compounds": [
+        "Fitosteroller",
+        "Beta-Glukan",
+        "Omega-3",
+        "Polifenoller"
+      ],
+      "foods": [
+        "Yulaf",
+        "Badem",
+        "Avokado",
+        "Zeytinyağı",
+        "Keten Tohumu"
+      ],
       "synergy": "Çözünür lifler bağırsakta kolesterol geri emilimini azaltabilir.",
-      "inhibitors": ["Margarin", "İşlenmiş et", "Trans yağ"]
+      "inhibitors": [
+        "Margarin",
+        "İşlenmiş et",
+        "Trans yağ"
+      ]
     },
     "hdl_low": {
-      "compounds": ["Omega-3", "Monodoymamış Yağ Asitleri", "Niasin"],
-      "foods": ["Zeytinyağı", "Avokado", "Badem", "Somon", "Fındık"],
+      "compounds": [
+        "Omega-3",
+        "Monodoymamış Yağ Asitleri",
+        "Niasin"
+      ],
+      "foods": [
+        "Zeytinyağı",
+        "Avokado",
+        "Badem",
+        "Somon",
+        "Fındık"
+      ],
       "synergy": "Düzenli aerobik egzersiz HDL yükselmesini destekleyebilir.",
-      "inhibitors": ["Sigara", "Hareketsizlik", "Trans yağlar"]
+      "inhibitors": [
+        "Sigara",
+        "Hareketsizlik",
+        "Trans yağlar"
+      ]
     },
     "ure_high": {
-      "compounds": ["Düşük Pürinli Proteinler", "Alkali Su", "Doğal Diüretikler", "Potasyum Destekli Sebzeler"],
-      "foods": ["Kereviz Sapı", "Karahindiba Çayı", "Maydanoz", "Ananas", "Kabak", "Salatalık"],
+      "compounds": [
+        "Düşük Pürinli Proteinler",
+        "Alkali Su",
+        "Doğal Diüretikler",
+        "Potasyum Destekli Sebzeler"
+      ],
+      "foods": [
+        "Kereviz Sapı",
+        "Karahindiba Çayı",
+        "Maydanoz",
+        "Ananas",
+        "Kabak",
+        "Salatalık"
+      ],
       "synergy": "Sodyum kısıtlı hidrasyon renal klirensi destekleyebilir.",
-      "inhibitors": ["Şarküteri ürünleri", "Sakatatlar", "Aşırı tuzlu peynirler"]
+      "inhibitors": [
+        "Şarküteri ürünleri",
+        "Sakatatlar",
+        "Aşırı tuzlu peynirler"
+      ]
     },
     "creatinine_high": {
-      "compounds": ["Bitkisel Antioksidanlar", "Potasyum Dengeli Mineraller", "Koenzim Q10"],
-      "foods": ["Kabak", "Yaban Mersini", "Lahana", "Kırmızı Biber", "Elma"],
+      "compounds": [
+        "Bitkisel Antioksidanlar",
+        "Potasyum Dengeli Mineraller",
+        "Koenzim Q10"
+      ],
+      "foods": [
+        "Kabak",
+        "Yaban Mersini",
+        "Lahana",
+        "Kırmızı Biber",
+        "Elma"
+      ],
       "synergy": "Düşük sodyumlu ve kontrollü protein içeren beslenme renal yükü azaltabilir.",
-      "inhibitors": ["Aşırı kırmızı et", "Kreatin takviyeleri", "Yüksek tuz"]
+      "inhibitors": [
+        "Aşırı kırmızı et",
+        "Kreatin takviyeleri",
+        "Yüksek tuz"
+      ]
     },
     "uric_acid_high": {
-      "compounds": ["Antosiyaninler", "Alkalize Mineraller", "Vitamin C"],
-      "foods": ["Vişne", "Limon", "Salatalık", "Kereviz", "Kabak"],
+      "compounds": [
+        "Antosiyaninler",
+        "Alkalize Mineraller",
+        "Vitamin C"
+      ],
+      "foods": [
+        "Vişne",
+        "Limon",
+        "Salatalık",
+        "Kereviz",
+        "Kabak"
+      ],
       "synergy": "Yüksek sıvı alımı ürik asit kristalizasyonunu azaltabilir.",
-      "inhibitors": ["Sakatatlar", "Bira", "Yüksek fruktozlu içecekler"]
+      "inhibitors": [
+        "Sakatatlar",
+        "Bira",
+        "Yüksek fruktozlu içecekler"
+      ]
     },
+    "mcv_low": {
+      "compounds": [
+        "Heme-Demir",
+        "Askorbik Asit (Vit C)",
+        "Bakır",
+        "B6 Vitamini"
+      ],
+      "foods": [
+        "Kırmızı Et",
+        "Kuzu Ciğeri",
+        "Mercimek",
+        "Pekmez",
+        "Kabak Çekirdeği",
+        "Maydanoz"
+      ],
+      "synergy": "Mikrositer tabloda demir emilimini artırmak için C vitamini kaynakları aynı öğünde tüketilmelidir.",
+      "inhibitors": [
+        "Siyah çay",
+        "Kahve",
+        "Fitat içeren kepekli tahıllar",
+        "Yüksek doz kalsiyum"
+      ]
+    },
+    "mcv_high": {
+      "compounds": [
+        "Metilkobalamin (B12)",
+        "Folat",
+        "Betain",
+        "Kolin"
+      ],
+      "foods": [
+        "Yumurta",
+        "Somon",
+        "Ispanak",
+        "Kuşkonmaz",
+        "Nohut",
+        "Karaciğer"
+      ],
+      "synergy": "Makrositoz tablosunda B12 ve folat birlikte optimize edilmeli, alkol tüketimi kesilmelidir.",
+      "inhibitors": [
+        "Alkol",
+        "Uzun süreli antasit kullanımı",
+        "Rafine karbonhidratlar"
+      ]
+    },
+    "plt_low": {
+      "compounds": [
+        "Folat",
+        "B12 Vitamini",
+        "K Vitamini",
+        "Papaya Yaprağı Polifenolleri"
+      ],
+      "foods": [
+        "Ispanak",
+        "Brokoli",
+        "Kivi",
+        "Nar",
+        "Pancar",
+        "Kuru Üzüm"
+      ],
+      "synergy": "Trombosit yapımı için folat, B12 ve K vitamini birlikte desteklenmelidir.",
+      "inhibitors": [
+        "Alkol",
+        "Kinin içeren tonikler",
+        "Aşırı sarımsak/zencefil (antiagregan etki)"
+      ]
+    },
+    "plt_high": {
+      "compounds": [
+        "Omega-3 (EPA/DHA)",
+        "Salisilatlar",
+        "Polifenoller",
+        "Magnezyum"
+      ],
+      "foods": [
+        "Zeytinyağı",
+        "Somon",
+        "Zencefil",
+        "Yaban Mersini",
+        "Yeşil Çay"
+      ],
+      "synergy": "Reaktif trombositozda yeterli hidrasyon ve omega-3 alımı kan viskozitesini destekler.",
+      "inhibitors": [
+        "Dehidratasyon",
+        "Sigara",
+        "Aşırı doymuş yağ"
+      ]
+    },
+    "neu_low": {
+      "compounds": [
+        "Çinko",
+        "Selenyum",
+        "B6 Vitamini",
+        "Bakır"
+      ],
+      "foods": [
+        "Kabak Çekirdeği",
+        "Brezilya Cevizi",
+        "Yumurta",
+        "Kefir",
+        "Nohut"
+      ],
+      "synergy": "Nötropenik dönemde gıda hijyeni kritiktir; çiğ ve pastörize edilmemiş ürünlerden kaçınılmalıdır.",
+      "inhibitors": [
+        "Çiğ süt ürünleri",
+        "Az pişmiş et",
+        "Yıkanmamış çiğ sebzeler"
+      ]
+    },
+    "alp_high": {
+      "compounds": [
+        "D Vitamini",
+        "K2 Vitamini",
+        "Magnezyum",
+        "Sülfürlü Antioksidanlar"
+      ],
+      "foods": [
+        "Somon",
+        "Yumurta Sarısı",
+        "Enginar",
+        "Turp",
+        "Lahana",
+        "Mantar"
+      ],
+      "synergy": "Kolestatik yükte safra akışını destekleyen acımsı sebzeler ve yeterli D vitamini önerilir.",
+      "inhibitors": [
+        "Alkol",
+        "Kızartmalar",
+        "Aşırı doymuş yağ"
+      ]
+    },
+    "ck_high": {
+      "compounds": [
+        "Magnezyum",
+        "Koenzim Q10",
+        "Antosiyaninler",
+        "Elektrolit Dengesi"
+      ],
+      "foods": [
+        "Vişne Suyu",
+        "Muz",
+        "Badem",
+        "Avokado",
+        "Patates",
+        "Hindistan Cevizi Suyu"
+      ],
+      "synergy": "Kas hasarı sonrası hidrasyon, magnezyum ve antosiyanin kombinasyonu toparlanmayı destekler.",
+      "inhibitors": [
+        "Dehidratasyon",
+        "Aşırı kafein",
+        "Yoğun egzersizin sürdürülmesi",
+        "Alkol"
+      ]
+    },
+    "sodyum_low": {
+      "compounds": [
+        "Sodyum",
+        "Potasyum Dengesi",
+        "Elektrolit Çözeltileri"
+      ],
+      "foods": [
+        "Ayran (Tuzlu)",
+        "Zeytin",
+        "Turşu Suyu",
+        "Sebze Suyu Çorbası",
+        "Deniz Tuzu"
+      ],
+      "synergy": "Hiponatremide serbest su alımı kısıtlanmalı, elektrolit dengeli sıvılar tercih edilmelidir.",
+      "inhibitors": [
+        "Aşırı sade su tüketimi",
+        "Diüretik etkili bitki çayları",
+        "Alkol"
+      ]
+    },
+    "potasyum_low": {
+      "compounds": [
+        "Potasyum",
+        "Magnezyum",
+        "Çözünür Lif"
+      ],
+      "foods": [
+        "Muz",
+        "Kuru Kayısı",
+        "Avokado",
+        "Patates",
+        "Ispanak",
+        "Fasulye"
+      ],
+      "synergy": "Potasyum replasmanı magnezyum düzeltilmeden kalıcı olmaz; ikisi birlikte optimize edilmelidir.",
+      "inhibitors": [
+        "Aşırı kafein",
+        "Alkol",
+        "Yüksek sodyumlu işlenmiş gıdalar"
+      ]
+    },
+    "potasyum_high": {
+      "compounds": [
+        "Düşük Potasyumlu Bitkisel Gıdalar",
+        "Kalsiyum Dengesi"
+      ],
+      "foods": [
+        "Elma",
+        "Salatalık",
+        "Haşlanmış Lahana",
+        "Beyaz Pirinç",
+        "Armut"
+      ],
+      "synergy": "Hiperkalemide sebzelerin haşlanıp suyunun dökülmesi potasyum yükünü belirgin azaltır.",
+      "inhibitors": [
+        "Muz",
+        "Kuru meyveler",
+        "Potasyum tuzu (tuz ikameleri)",
+        "Domates salçası"
+      ]
+    },
+    "fosfor_low": {
+      "compounds": [
+        "Fosfor",
+        "D Vitamini",
+        "Protein"
+      ],
+      "foods": [
+        "Süt",
+        "Peynir",
+        "Yumurta",
+        "Badem",
+        "Kabak Çekirdeği",
+        "Mercimek"
+      ],
+      "synergy": "Fosfor emilimi için yeterli D vitamini düzeyi gereklidir.",
+      "inhibitors": [
+        "Antasit kullanımı",
+        "Aşırı alkol",
+        "Kronik malabsorbsiyon"
+      ]
+    },
+    "kalsiyum_low": {
+      "compounds": [
+        "Kalsiyum",
+        "D Vitamini",
+        "K2 Vitamini",
+        "Magnezyum"
+      ],
+      "foods": [
+        "Yoğurt",
+        "Kefir",
+        "Susam Tahini",
+        "Badem",
+        "Brokoli",
+        "Sardalya"
+      ],
+      "synergy": "Kalsiyum emilimi D vitamini yeterliliğine bağlıdır; K2 kalsiyumu kemiğe yönlendirir.",
+      "inhibitors": [
+        "Aşırı tuz",
+        "Aşırı kafein",
+        "Fitat ve oksalat yoğun çiğ tüketim",
+        "Gazlı içecekler"
+      ]
+    },
+    "kalsiyum_high": {
+      "compounds": [
+        "Hidrasyon",
+        "Lif",
+        "Düşük Kalsiyumlu Protein Kaynakları"
+      ],
+      "foods": [
+        "Salatalık",
+        "Kabak",
+        "Elma",
+        "Karpuz",
+        "Beyaz Et"
+      ],
+      "synergy": "Hiperkalsemide bol sıvı alımı renal kalsiyum atılımını destekler.",
+      "inhibitors": [
+        "Kalsiyum takviyeleri",
+        "Yüksek doz D vitamini",
+        "Aşırı süt ürünü",
+        "Antasitler"
+      ]
+    },
+    "tsh_high": {
+      "compounds": [
+        "İyot",
+        "Selenyum",
+        "Çinko",
+        "Tirozin",
+        "D Vitamini"
+      ],
+      "foods": [
+        "Deniz Yosunu",
+        "Brezilya Cevizi",
+        "Yumurta",
+        "Somon",
+        "Kabak Çekirdeği"
+      ],
+      "synergy": "Tiroid hormon sentezi için iyot ve selenyum birlikte yeterli olmalıdır.",
+      "inhibitors": [
+        "Çiğ guatrojenik sebzeler (lahana, karnabahar)",
+        "Aşırı soya",
+        "Kalsiyum/demir takviyesiyle eşzamanlı ilaç alımı"
+      ]
+    },
+    "tsh_low": {
+      "compounds": [
+        "Antioksidanlar",
+        "L-Karnitin",
+        "Kalsiyum",
+        "D Vitamini"
+      ],
+      "foods": [
+        "Brokoli",
+        "Karnabahar",
+        "Lahana",
+        "Yoğurt",
+        "Yulaf",
+        "Ceviz"
+      ],
+      "synergy": "Hipertiroidide artan kalori ve protein ihtiyacı ile kemik koruyucu kalsiyum-D desteği önemlidir.",
+      "inhibitors": [
+        "İyotlu tuz fazlalığı",
+        "Deniz yosunu",
+        "Kafein",
+        "Enerji içecekleri"
+      ]
+    },
+    "glukoz_low": {
+      "compounds": [
+        "Kompleks Karbonhidrat",
+        "Protein",
+        "Çözünür Lif",
+        "Krom"
+      ],
+      "foods": [
+        "Yulaf",
+        "Tam Tahıllı Ekmek",
+        "Yumurta",
+        "Badem",
+        "Elma",
+        "Yoğurt"
+      ],
+      "synergy": "Hipoglisemi eğiliminde sık aralıklı, protein-lif dengeli öğünler kan şekerini stabilize eder.",
+      "inhibitors": [
+        "Basit şekerler",
+        "Aç karnına kafein",
+        "Alkol",
+        "Uzun açlık periyotları"
+      ]
+    },
+    "kolesterol_high": {
+      "compounds": [
+        "Beta-Glukan",
+        "Fitosteroller",
+        "Çözünür Lif",
+        "Polifenoller"
+      ],
+      "foods": [
+        "Yulaf",
+        "Arpa",
+        "Badem",
+        "Zeytinyağı",
+        "Enginar",
+        "Bakliyat",
+        "Elma"
+      ],
+      "synergy": "Günde 3 g beta-glukan alımı total kolesterol düşüşünü destekleyebilir.",
+      "inhibitors": [
+        "Trans yağlar",
+        "İşlenmiş et ürünleri",
+        "Palm yağı",
+        "Kızartmalar"
+      ]
+    },
+    "albumin_low": {
+      "compounds": [
+        "Yüksek Biyoyararlanımlı Protein",
+        "Dallı Zincirli Aminoasitler",
+        "Çinko"
+      ],
+      "foods": [
+        "Yumurta Akı",
+        "Beyaz Et",
+        "Balık",
+        "Yoğurt",
+        "Mercimek",
+        "Peynir"
+      ],
+      "synergy": "Protein sentezi için yeterli enerji alımı şarttır; kalori kısıtlaması albümin yükselmesini engeller.",
+      "inhibitors": [
+        "Alkol",
+        "Aşırı tuz",
+        "Kronik inflamasyon",
+        "Yetersiz kalori alımı"
+      ]
+    },
+    "bilirubin_high": {
+      "compounds": [
+        "Silimarin",
+        "Antioksidanlar",
+        "Çözünür Lif",
+        "Su"
+      ],
+      "foods": [
+        "Enginar",
+        "Turp",
+        "Kereviz",
+        "Elma",
+        "Yaban Mersini",
+        "Zerdeçal"
+      ],
+      "synergy": "Yeterli sıvı alımı ve lif, bilirubinin bağırsak yoluyla atılımını destekler.",
+      "inhibitors": [
+        "Alkol",
+        "Uzun süreli açlık",
+        "Yağlı kızartmalar",
+        "Parasetamol aşırı kullanımı"
+      ]
+    },
+    "pankreas_high": {
+      "compounds": [
+        "Düşük Yağlı Protein",
+        "Orta Zincirli Trigliserit",
+        "Antioksidanlar"
+      ],
+      "foods": [
+        "Haşlanmış Tavuk",
+        "Beyaz Pirinç",
+        "Elma Püresi",
+        "Kabak",
+        "Yulaf Lapası"
+      ],
+      "synergy": "Pankreas enzim yüksekliğinde düşük yağlı, küçük porsiyonlu öğünler enzim uyarısını azaltır.",
+      "inhibitors": [
+        "Alkol",
+        "Yağlı yiyecekler",
+        "Ağır öğünler",
+        "Sigara"
+      ]
+    }
+  },
+  "SYMPTOM_NUTRITION_DB": {
     "reflux": {
-      "compounds": ["Müsilajlar", "Probiyotikler", "Çinko-Karnosin"],
-      "foods": ["Yulaf", "Muz", "Kefir", "Haşlanmış Patates", "Rezene"],
+      "compounds": [
+        "Müsilajlar",
+        "Probiyotikler",
+        "Çinko-Karnosin"
+      ],
+      "foods": [
+        "Yulaf",
+        "Muz",
+        "Kefir",
+        "Haşlanmış Patates",
+        "Rezene"
+      ],
       "synergy": "Küçük porsiyonlu ve düşük asit yüküne sahip öğünler önerilir.",
-      "inhibitors": ["Kafein", "Domates sosu", "Acı baharat", "Gazlı içecekler"]
+      "inhibitors": [
+        "Kafein",
+        "Domates sosu",
+        "Acı baharat",
+        "Gazlı içecekler"
+      ],
+      "triggers": [
+        "reflü",
+        "reflu",
+        "mide yanma",
+        "gastrit",
+        "ülser",
+        "ulser",
+        "gastroözofageal"
+      ]
     },
     "constipation": {
-      "compounds": ["Çözünür Lif", "Magnezyum", "Prebiyotikler"],
-      "foods": ["Kuru Erik", "Chia", "Yulaf", "Kefir", "Armut"],
+      "compounds": [
+        "Çözünür Lif",
+        "Magnezyum",
+        "Prebiyotikler"
+      ],
+      "foods": [
+        "Kuru Erik",
+        "Chia",
+        "Yulaf",
+        "Kefir",
+        "Armut"
+      ],
       "synergy": "Yeterli su tüketimi lif etkinliğini artırır.",
-      "inhibitors": ["Düşük sıvı alımı", "Ultra işlenmiş gıdalar"]
+      "inhibitors": [
+        "Düşük sıvı alımı",
+        "Ultra işlenmiş gıdalar"
+      ],
+      "triggers": [
+        "kabız",
+        "kabiz",
+        "konstipasyon",
+        "bağırsak tembel",
+        "bagirsak tembel"
+      ]
     },
     "fatigue": {
-      "compounds": ["Koenzim Q10", "B Kompleks", "Magnezyum", "Demir"],
-      "foods": ["Yumurta", "Ispanak", "Badem", "Kakao", "Somon"],
+      "compounds": [
+        "Koenzim Q10",
+        "B Kompleks",
+        "Magnezyum",
+        "Demir"
+      ],
+      "foods": [
+        "Yumurta",
+        "Ispanak",
+        "Badem",
+        "Kakao",
+        "Somon"
+      ],
       "synergy": "Mitokondriyal enerji metabolizması için düzenli uyku ve protein alımı önemlidir.",
-      "inhibitors": ["Uyku eksikliği", "Aşırı kafein", "Şekerli enerji içecekleri"]
+      "inhibitors": [
+        "Uyku eksikliği",
+        "Aşırı kafein",
+        "Şekerli enerji içecekleri"
+      ],
+      "triggers": [
+        "yorgun",
+        "halsiz",
+        "bitkin",
+        "tükenmiş",
+        "tukenmis",
+        "kronik yorgunluk"
+      ]
     },
     "stress_high": {
-      "compounds": ["Magnezyum", "L-Theanine", "Ashwagandha", "Omega-3"],
-      "foods": ["Yeşil Çay", "Badem", "Kakao", "Avokado", "Papatya Çayı"],
+      "compounds": [
+        "Magnezyum",
+        "L-Theanine",
+        "Ashwagandha",
+        "Omega-3"
+      ],
+      "foods": [
+        "Yeşil Çay",
+        "Badem",
+        "Kakao",
+        "Avokado",
+        "Papatya Çayı"
+      ],
       "synergy": "Magnezyum ve kaliteli uyku kombinasyonu nörovejetatif dengeyi destekleyebilir.",
-      "inhibitors": ["Aşırı kafein", "Enerji içecekleri", "Kronik uyku eksikliği"]
+      "inhibitors": [
+        "Aşırı kafein",
+        "Enerji içecekleri",
+        "Kronik uyku eksikliği"
+      ],
+      "triggers": [
+        "stres",
+        "anksiyete",
+        "uykusuz",
+        "panik atak",
+        "depresyon"
+      ]
     }
   },
   "extended_dict": {
