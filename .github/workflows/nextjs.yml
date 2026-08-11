@@ -74,6 +74,11 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
+        env:
+          # Yayınlanan statik sitenin konuşacağı backend adresi.
+          # Repo ayarlarında bir `NEXT_PUBLIC_API_URL` variable tanımlanmazsa
+          # arayüz "backend çevrimdışı" uyarısını gösterir (beklenen davranış).
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

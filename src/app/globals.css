@@ -1,49 +1,391 @@
-@import "tailwindcss"; /* Eski 3 satır yerine sadece bu yeterli olabilir */
+﻿@import "tailwindcss";
 
-/* Eğer üstteki çalışmazsa eski usul devam et ama paket yüklendiği için hata kalkacaktır */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ═══════════════════════════════════════════════════════════════════════
+   HEALTHSCOPE TASARIM SİSTEMİ
+   ───────────────────────────────────────────────────────────────────────
+   Klinik yazılım estetiği: bilgi yoğunluğu dekorasyondan önce gelir.
+
+   İlkeler
+     1. Renk yalnızca ANLAM taşır. Nötr arayüz; kırmızı/mavi/yeşil sadece
+        klinik durum için. Dekoratif renk yok.
+     2. Köşe yarıçapı 4-12 px. Gölge yerine 1 px kenarlık.
+     3. Tipografi hiyerarşisi boyut ve ağırlıkla kurulur; harf aralığı
+        açılmış büyük harflerle değil.
+     4. Laboratuvar değerleri tabular rakamla hizalanır.
+
+   Temalar `:root` (aydınlık) ve `[data-theme="dark"]` üzerinden çalışır.
+   Tailwind v4 tokenları `@theme inline` ile bu değişkenlere BAĞLANIR;
+   böylece tema anahtarı çalışma zamanında geçerli olur.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 :root {
-  --background: #030712; /* Çok koyu gri/siyah */
-  --foreground: #f1f5f9;
+  /* Yüzeyler */
+  --surface: #f6f7f9;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eef1f5;
+  --surface-hover: #f0f3f7;
+
+  /* Kenarlıklar */
+  --border: #dfe4ea;
+  --border-strong: #c3ccd6;
+
+  /* Metin */
+  --text: #101820;
+  --text-muted: #566172;
+  --text-subtle: #8a94a2;
+
+  /* Vurgu — tek renk, ölçülü */
+  --accent: #14618f;
+  --accent-hover: #0f4d73;
+  --accent-soft: #e6f0f7;
+  --accent-border: #bcd7e9;
+
+  /* Klinik durum renkleri */
+  --high: #b03024;          /* referansın üstü */
+  --high-soft: #fceceb;
+  --high-border: #f0c4c0;
+  --low: #16558f;           /* referansın altı */
+  --low-soft: #e8f0f8;
+  --low-border: #bdd3e8;
+  --ok: #1c6b45;            /* normal */
+  --ok-soft: #e7f3ec;
+  --ok-border: #bcdcc9;
+  --warn: #8a5a10;          /* dikkat */
+  --warn-soft: #fdf2e0;
+  --warn-border: #efd7a8;
+
+  /* Anatomi şeması — şiddet skalası */
+  --organ-body: #dfe5ec;
+  --organ-body-light: #edf1f6;
+  --organ-stroke: #7b8a9b;
+  --organ-vessel: #b03024;
+  --organ-vein: #3a6ea8;
+  --organ-bone: #e6e9ee;
+  --organ-bone-edge: #c2c9d3;
+  /* Kas dokusu — gövdeye kütle verir. Çok hafif sıcak ton: "renk" olarak
+     okunmaz ama dokuyu organdan ve boşluktan ayırır. */
+  --organ-muscle: #d3bfbd;
+  --organ-muscle-edge: #b09a97;
+  --organ-normal: #ccd7e2;
+  --organ-mild: #f5d9a8;
+  --organ-moderate: #e8a05c;
+  --organ-severe: #c0392b;
+
+  /* Grafik serileri */
+  --chart-grid: #e4e8ee;
+  --chart-axis: #8a94a2;
+
+  /* Köşe yarıçapı — klinik yazılım ölçeği */
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 7px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  color-scheme: light;
 }
 
+[data-theme="dark"] {
+  --surface: #0f1319;
+  --surface-raised: #171c24;
+  --surface-sunken: #0a0d12;
+  --surface-hover: #1d232c;
+
+  --border: #262d38;
+  --border-strong: #3a4351;
+
+  --text: #e8edf3;
+  --text-muted: #9aa5b4;
+  --text-subtle: #6c7684;
+
+  --accent: #4d9fd6;
+  --organ-body: #1b212a;
+  --organ-body-light: #232b36;
+  --organ-stroke: #74839a;
+  --organ-vessel: #e06c60;
+  --organ-vein: #5b8fc9;
+  --organ-bone: #3d4757;
+  --organ-bone-edge: #6a7787;
+  --organ-muscle: #55454a;
+  --organ-muscle-edge: #756066;
+  --organ-normal: #333d4b;
+  --organ-mild: #7a5c28;
+  --organ-moderate: #b5742f;
+  --organ-severe: #d9534f;
+
+  --accent-hover: #6fb4e3;
+  --accent-soft: #12283a;
+  --accent-border: #234a68;
+
+  --high: #e8756a;
+  --high-soft: #2b1614;
+  --high-border: #4a2622;
+  --low: #6bb0e8;
+  --low-soft: #12222f;
+  --low-border: #1f3d55;
+  --ok: #56b585;
+  --ok-soft: #10241a;
+  --ok-border: #1e4030;
+  --warn: #d9a441;
+  --warn-soft: #261e0e;
+  --warn-border: #453519;
+
+  --chart-grid: #232a34;
+  --chart-axis: #6c7684;
+
+  color-scheme: dark;
+}
+
+/* Kullanıcı tercihi yoksa sistem ayarına uy */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #030712;
-    --foreground: #f1f5f9;
+  :root:not([data-theme="light"]) {
+    --surface: #0f1319;
+    --surface-raised: #171c24;
+    --surface-sunken: #0a0d12;
+    --surface-hover: #1d232c;
+    --border: #262d38;
+    --border-strong: #3a4351;
+    --text: #e8edf3;
+    --text-muted: #9aa5b4;
+    --text-subtle: #6c7684;
+    --accent: #4d9fd6;
+  --organ-body: #1b212a;
+  --organ-body-light: #232b36;
+  --organ-stroke: #74839a;
+  --organ-vessel: #e06c60;
+  --organ-vein: #5b8fc9;
+  --organ-bone: #3d4757;
+  --organ-bone-edge: #6a7787;
+  --organ-muscle: #55454a;
+  --organ-muscle-edge: #756066;
+  --organ-normal: #333d4b;
+  --organ-mild: #7a5c28;
+  --organ-moderate: #b5742f;
+  --organ-severe: #d9534f;
+
+    --accent-hover: #6fb4e3;
+    --accent-soft: #12283a;
+    --accent-border: #234a68;
+    --high: #e8756a;
+    --high-soft: #2b1614;
+    --high-border: #4a2622;
+    --low: #6bb0e8;
+    --low-soft: #12222f;
+    --low-border: #1f3d55;
+    --ok: #56b585;
+    --ok-soft: #10241a;
+    --ok-border: #1e4030;
+    --warn: #d9a441;
+    --warn-soft: #261e0e;
+    --warn-border: #453519;
+    --chart-grid: #232a34;
+    --chart-axis: #6c7684;
+    color-scheme: dark;
   }
 }
 
+/* Tailwind v4 token bağlama — `inline` çalışma zamanı değişkenini korur */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-sunken: var(--surface-sunken);
+  --color-hover: var(--surface-hover);
+
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+
+  --color-ink: var(--text);
+  --color-ink-muted: var(--text-muted);
+  --color-ink-subtle: var(--text-subtle);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-border);
+
+  --color-high: var(--high);
+  --color-high-soft: var(--high-soft);
+  --color-high-line: var(--high-border);
+  --color-low: var(--low);
+  --color-low-soft: var(--low-soft);
+  --color-low-line: var(--low-border);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-ok-line: var(--ok-border);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-line: var(--warn-border);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+
+/* ── Temel ─────────────────────────────────────────────────────────────── */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-feature-settings: "rlig" 1, "calt" 1; /* Font kalitesi için */
+  background: var(--surface);
+  color: var(--text);
+  font-feature-settings: "cv05" 1, "ss01" 1;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Modern Minimalist Scrollbar */
+/* Laboratuvar değerleri sütun hâlinde hizalansın */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Klavye erişilebilirliği — odak halkası her yerde görünür olsun */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* ── Kaydırma çubuğu ───────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #1e293b; /* slate-800 */
-  border-radius: 10px;
+  background: var(--border-strong);
+  border-radius: 999px;
+  border: 3px solid var(--surface);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #334155; /* slate-700 */
+/* ── Yazdırma: çıktı gerçekten rapor gibi görünsün ─────────────────────── */
+@media print {
+  :root {
+    --surface: #ffffff;
+    --surface-raised: #ffffff;
+    --surface-sunken: #ffffff;
+    --border: #c8ced6;
+    --text: #000000;
+    --text-muted: #333333;
+    --text-subtle: #555555;
+  }
+
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  /* Kartlar sayfa ortasından bölünmesin */
+  section,
+  article,
+  table {
+    break-inside: avoid;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9px;
+    color: #555;
+  }
 }
-/* globals.css içindeki .text-gradient kısmını bununla değiştir */
-.text-gradient {
-  background: linear-gradient(to right, #ffffff, #cbd5e1, #64748b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+
+/* ── Anatomi şeması ─────────────────────────────────────────────────────
+   Canlı animasyonlar: kalp atışı, damarda akış, karaciğer/böbrekte süzme.
+   Hepsi CSS ile — 3B kütüphane ya da model dosyası gerekmez. */
+
+.anatomy-svg {
+  display: block;
+  height: auto;
+}
+
+.anatomy-organ {
+  cursor: pointer;
+  transition: filter 160ms ease, stroke-width 160ms ease;
+  outline: none;
+}
+
+.anatomy-organ:hover,
+.anatomy-organ:focus-visible {
+  filter: brightness(1.08);
+  stroke-width: 1.6;
+}
+
+.anatomy-organ.is-selected {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+/* Kalp atışı — iki evreli, gerçek nabza benzer ritim */
+@keyframes anatomy-heartbeat {
+  0%, 100% { transform: scale(1); }
+  12%      { transform: scale(1.12); }
+  24%      { transform: scale(1); }
+  36%      { transform: scale(1.07); }
+  48%      { transform: scale(1); }
+}
+
+.anatomy-heart {
+  animation: anatomy-heartbeat 1.15s ease-in-out infinite;
+}
+
+/* Damarda kan akışı — kesikli çizginin kaydırılması */
+@keyframes anatomy-blood-flow {
+  from { stroke-dashoffset: 36; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.anatomy-flow {
+  animation: anatomy-blood-flow 1.8s linear infinite;
+}
+
+/* Karaciğer ve böbrekte süzme — yavaş, hafif nefes alma */
+@keyframes anatomy-filtering {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.78; }
+}
+
+.anatomy-filter {
+  animation: anatomy-filtering 3.4s ease-in-out infinite;
+}
+
+/* Hareket hassasiyeti ve yazdırma: animasyon yok */
+@media (prefers-reduced-motion: reduce) {
+  .anatomy-heart,
+  .anatomy-flow,
+  .anatomy-filter {
+    animation: none;
+  }
+}
+
+@media print {
+  .anatomy-heart,
+  .anatomy-flow,
+  .anatomy-filter {
+    animation: none;
+  }
+  .anatomy-organ {
+    cursor: default;
+  }
+}
+
+/* Anatomi şeması — gövde ve etiket */
+.anatomy-body path,
+.anatomy-body ellipse {
+  transition: fill 200ms ease;
+}
+
+.anatomy-caption {
+  fill: var(--text-subtle);
+  font-size: 10px;
+  font-style: italic;
+  letter-spacing: 0.02em;
 }

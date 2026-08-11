@@ -1,96 +1,126 @@
 "use client";
-import React, { useState } from 'react';
-import { AnalysisForm } from '@/components/analysis/AnalysisForm';
-import { ResultCard } from '@/components/analysis/ResultCard';
+import React, { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 
+import { AnalysisForm, type FormState } from "@/components/analysis/AnalysisForm";
+import { ResultCard, type PatientContext } from "@/components/analysis/ResultCard";
+import { analyze, useBackendStatus, type AnalyzeResponse, API_BASE_URL } from "@/lib/api";
+import { Notice, PageHeader, StatusDot } from "@/components/ui/Primitives";
 
-
-export default function KanAnaliziPage() {
+export default function AnalysisPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [result, setResult] = useState<AnalyzeResponse | null>(null);
+  const [patient, setPatient] = useState<PatientContext | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleRunAnalysis = async (formData: any) => {
+  // Statik yayında (GitHub Pages) backend'e erişilemez; kullanıcıya sessiz
+  // hata yerine açık bir uyarı gösterilir.
+  const { state, status, refresh } = useBackendStatus(30_000);
+
+  const handleRunAnalysis = async (formData: FormState) => {
     setIsLoading(true);
+    setError(null);
     try {
-      const response = await fetch('http://127.0.0.1:8000/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          values: formData.labValues,
-          biometrics: formData.biometrics,
-          medical: formData.medical
-        })
+      const response = await analyze({
+        values: formData.labValues,
+        biometrics: {
+          yas: Number(formData.biometrics.yas),
+          cinsiyet: formData.biometrics.cinsiyet,
+          kilo: Number(formData.biometrics.kilo),
+          boy: Number(formData.biometrics.boy),
+        },
+        medical: {
+          kronik: formData.medical.kronik || "Yok",
+          alerjiler: formData.medical.alerjiler,
+          genetik_riskler: formData.medical.genetik ? [formData.medical.genetik] : [],
+        },
       });
 
-      if (!response.ok) throw new Error("Sunucu analizi tamamlayamadı.");
-
-      const data = await response.json();
-
-      
-      
-      // ── YENİ KURUMSAL BACKEND İLE FRONTEND KARTLARININ KUSURSUZ EŞLEŞMESİ ──
-      setAnalysisResult({
-        // 1. Ana Karar Metni
-        summary: data.executive_summary || "Analiz tamamlandı, bulgular listeleniyor.",
-        
-        // 2. Biyometrik ve Fizyolojik Veriler (Yaş, Cinsiyet, VKI)
-        patient_metrics: {
-          age: Number(formData.biometrics.yas) || 0,
-          gender: formData.biometrics.cinsiyet === "male" ? "Erkek" : "Kadın",
-          bmi: data.physiological_metrics?.bmi || 0,
-          allergy_count: Array.isArray(formData.medical.alerjiler) 
-            ? formData.medical.alerjiler.length 
-            : 0
-        },
-
-        // 3. Yapay Zeka Olasılık Grafiği (Olası Teşhisler Çubukları için)
-        ai_report: {
-          top_diagnosis: data.ai_inference_results?.probabilities_chart_data?.[0]?.diagnosis || "Metabolik Düzensizlik",
-          // Backend'den gelen objeyi ResultCard'ın beklediği {name, probability} formatına haritalıyoruz
-          probabilities: (data.ai_inference_results?.probabilities_chart_data || []).map((item: any) => ({
-            name: item.diagnosis,
-            probability: `${item.probability}%`
-          })),
-          detailed_comment: `İnferans motoru (v${data.engine_version}) tahlil verilerini ${data.clinical_findings?.primary_focus_domain || 'Klinik'} perspektifinden işleyerek ${data.timestamp}ms'de sonuçlandırdı.`
-        },
-
-        // 4. Tespit Edilen Sapmalar (Kırmızı Uyarılar Bölümü)
-        risks: (data.clinical_findings?.abnormal_parameters_detected || []).map(
-          (item: any) => `${item.label} parametresi %${item.deviation_percentage} ${item.status} (${item.value} ${item.unit})`
-        ),
-
-        // 5. Gıda Mühendisliği & Beslenme Protokolü
-        foods: data.bio_nutritional_protocol?.allergy_cleared_foods || [],
-        
-        // 6. Biyokimyasal Sinerji ve Beslenme Tavsiyesi
-        dietAdvice: (data.bio_nutritional_protocol?.biochemical_synergies || []).join(" ") 
-          || "Fizyolojik dengeyi korumak için çeşitli ve dengeli beslenme protokolü önerilir."
+      setPatient({
+        age: Number(formData.biometrics.yas) || 0,
+        gender: formData.biometrics.cinsiyet === "male" ? "Erkek" : "Kadın",
+        allergyCount: formData.medical.alerjiler.length,
       });
-      
-    } catch (error) {
-      console.error("Analiz Hatası:", error);
-      alert("API bağlantı veya veri haritalama hatası!");
+      setResult(response);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (caught) {
+      console.error("Analiz hatası:", caught);
+      setError(caught instanceof Error ? caught.message : "Bilinmeyen bir hata oluştu.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="p-6 space-y-8">
-      <h1 className="text-4xl font-bold text-white tracking-tighter">AI Derin Analiz Merkezi</h1>
+    <div className="space-y-6">
+      <PageHeader
+        title="Kan Analizi"
+        subtitle="Klinik karar destek sistemi — teşhis aracı değildir"
+        aside={
+          <StatusDot
+            state={state}
+            label={state === "online" ? `Çevrimiçi · ${status?.hardware.device}` : undefined}
+            onRetry={refresh}
+          />
+        }
+      />
 
-      
-      {!analysisResult ? (
-        <AnalysisForm onAnalyze={handleRunAnalysis} isLoading={isLoading} />
+      {state === "offline" && (
+        <Notice tone="warn" title="Analiz sunucusuna ulaşılamıyor">
+          <p className="mb-2">
+            Yapay zekâ çekirdeği yerel olarak çalışır ve statik yayınlanan siteden erişilemez.
+            Analiz için projeyi indirip sunucuyu başlatın:
+          </p>
+          <code className="mb-2 block rounded-sm border border-line bg-sunken px-3 py-2 font-mono text-[11px] text-ink">
+            pip install -r requirements.txt &amp;&amp; python api_server.py
+          </code>
+          <p className="text-[11px]">
+            Beklenen adres: <span className="font-mono">{API_BASE_URL}</span> — farklıysa{" "}
+            <span className="font-mono">NEXT_PUBLIC_API_URL</span> ile değiştirin.
+          </p>
+        </Notice>
+      )}
+
+      {status?.inference.state === "error" && (
+        <Notice tone="danger" title="Yapay zekâ modeli yüklenemedi">
+          {status.inference.error}
+        </Notice>
+      )}
+
+      {state === "online" && status && !status.inference.fine_tuned && (
+        <Notice tone="warn" title="Fine-tune edilmemiş temel model kullanılıyor">
+          <span className="font-mono">HEALTHSCOPE_MODEL_PATH</span> tanımlı olmadığı için çıkarım{" "}
+          <span className="font-mono">{status.inference.base_model}</span> ile yapılıyor. Dil modeli
+          çıktısının klinik anlamlılığı sınırlıdır.
+        </Notice>
+      )}
+
+      {error && (
+        <Notice tone="danger" title="Analiz tamamlanamadı">
+          {error}
+        </Notice>
+      )}
+
+      {!result ? (
+        <AnalysisForm
+          onAnalyze={handleRunAnalysis}
+          isLoading={isLoading}
+          disabled={state === "offline"}
+          pdfSupported={status?.pdf_support ?? false}
+        />
       ) : (
-        <div className="space-y-6 animate-in fade-in zoom-in duration-500">
-          <button 
-            onClick={() => setAnalysisResult(null)} 
-            className="bg-slate-800 text-blue-400 px-6 py-3 rounded-2xl font-bold border border-slate-700 transition-all hover:bg-slate-700"
+        <div className="space-y-6">
+          <button
+            data-print-hide
+            onClick={() => {
+              setResult(null);
+              setError(null);
+            }}
+            className="inline-flex items-center gap-2 rounded-md border border-line bg-raised px-3.5 py-2 text-sm font-medium text-ink-muted transition-colors hover:bg-hover hover:text-ink"
           >
-            ← YENİ ANALİZ BAŞLAT
+            <ArrowLeft size={15} /> Yeni analiz
           </button>
-          <ResultCard result={analysisResult} />
+          <ResultCard result={result} patient={patient} />
         </div>
       )}
     </div>

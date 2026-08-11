@@ -1,86 +1,212 @@
 "use client";
-import React, { useState } from 'react';
-import { Search, Droplets, Activity, ShieldAlert, HeartPulse, Zap, Brain, Scale, Thermometer } from 'lucide-react';
+import React, { useMemo, useState } from "react";
+import { Ban, FlaskConical, Search, Sparkles, Utensils } from "lucide-react";
 
-// Marker bazlı gelişmiş veri seti (Örnek 12 gıda gösterilmiştir, dizi 100+ olacak şekilde genişletilir)
-const BIO_DATABASE = [
-  { name: "Zerdeçal", marker: "CRP", category: "Anti-İnflamatuar", impact: "Sitokin İnhibisyonu", icon: ShieldAlert, desc: "Kronik inflamasyonu ve eklem hassasiyetini azaltır." },
-  { name: "Ispanak", marker: "HGB", category: "Hematopoetik", impact: "Eritrosit Sentezi", icon: Droplets, desc: "Demir ve folat deposu ile kan yapımını destekler." },
-  { name: "Enginar", marker: "ALT/AST", category: "Hepatoprotektif", impact: "Hepatik Rejenerasyon", icon: Activity, desc: "Karaciğer enzimlerini stabilize eder." },
-  { name: "Ceviz", marker: "LDL", category: "Lipid Dengesi", impact: "Endotel Onarımı", icon: HeartPulse, desc: "Omega-3 ile damar sertliğini ve kötü kolesterolü önler." },
-  { name: "Kuşkonmaz", marker: "Üre", category: "Renal Destek", impact: "Filtrasyon Artışı", icon: Zap, desc: "Böbreklerin toksin atım kapasitesini optimize eder." },
-  { name: "Yumurta Akı", marker: "Albumin", category: "Protein Sentezi", impact: "Osmatik Basınç", icon: Scale, desc: "Kas kütlesini ve kan protein dengesini korur." },
-  { name: "Kefir", marker: "WBC", category: "İmmün Modülatör", impact: "Mikrobiyota Desteği", icon: ShieldAlert, desc: "Bağışıklık hücrelerinin yanıt hızını artırır." },
-  { name: "Kabak", marker: "Glukoz", category: "Glikemik Kontrol", impact: "İnsülin Duyarlılığı", icon: Activity, desc: "Kan şekerinin stabil kalmasına yardımcı olur." },
-  { name: "Deniz Yosunu", marker: "TSH", category: "Endokrin", impact: "İyot Regülasyonu", icon: Zap, desc: "Tiroit hormonlarının sentezini dengeleyen mineraller sağlar." },
-  { name: "Bitter Çikolata", marker: "HDL", category: "Vasküler", impact: "Flavonoid Desteği", icon: HeartPulse, desc: "İyi kolesterolü artırarak kalp sağlığını korur." },
-  { name: "Zencefil", marker: "Amilaz", category: "Sindirim", impact: "Enzimatik Aktivite", icon: Brain, desc: "Pankreatik enzim salgısını optimize eder." },
-  { name: "Brokoli", marker: "GGT", category: "Detoks", impact: "Faz II Yolakları", icon: Thermometer, desc: "Karaciğerdeki detoksifikasyon enzimlerini aktive eder." }
-  // Bu dizi 100+ elemana kadar append edilir...
-];
+import { CATALOG_STATS, PROTOCOLS, parametersForProtocol, type NutritionProtocol } from "@/lib/catalog";
+import { Badge, PageHeader, Panel } from "@/components/ui/Primitives";
 
-const FoodCard = ({ food }: any) => {
-  const Icon = food.icon;
-  return (
-    <div className="bg-slate-900/40 border border-slate-800/60 p-5 rounded-3xl hover:border-blue-500/40 transition-all group">
-      <div className="flex justify-between items-start mb-3">
-        <div className="p-2.5 bg-blue-500/10 rounded-xl text-blue-500 group-hover:scale-110 transition-transform">
-          <Icon size={18} />
-        </div>
-        <span className="text-[9px] font-bold text-slate-500 bg-slate-800/50 px-2 py-1 rounded-md uppercase tracking-tighter">
-          {food.marker} Odaklı
-        </span>
-      </div>
-      <h4 className="text-white font-bold text-base mb-1">{food.name}</h4>
-      <p className="text-slate-500 text-[10px] uppercase font-semibold mb-2">{food.category}</p>
-      <p className="text-slate-400 text-xs leading-snug mb-4 line-clamp-2">{food.desc}</p>
-      <div className="pt-3 border-t border-slate-800/50 flex justify-between items-center">
-        <span className="text-[10px] text-slate-500">Biyokimyasal Etki</span>
-        <span className="text-[10px] text-emerald-400 font-bold">{food.impact}</span>
-      </div>
-    </div>
-  );
-};
+/**
+ * Veri doğrudan `database.json` içindeki BIO_NUTRITION_DB'den gelir — yani
+ * analiz motorunun gerçekten kullandığı protokollerin ta kendisidir.
+ */
+interface ProtocolView extends NutritionProtocol {
+  triggers: Array<{ parameterLabel: string; parameterShort: string; direction: "Yüksek" | "Düşük"; domain: string }>;
+  domains: string[];
+}
 
-export default function DeepFoodDatabase() {
+const PROTOCOL_VIEWS: ProtocolView[] = PROTOCOLS.map((protocol) => {
+  const matches = parametersForProtocol(protocol.key);
+  // Başlıkta protokol anahtarının ait olduğu parametre öne alınır.
+  const primaryIndex = matches.findIndex(({ parameter }) => protocol.key.startsWith(parameter.id));
+  const ordered =
+    primaryIndex > 0
+      ? [matches[primaryIndex], ...matches.filter((_, index) => index !== primaryIndex)]
+      : matches;
+
+  return {
+    ...protocol,
+    triggers: ordered.map(({ parameter, direction }) => ({
+      parameterLabel: parameter.label,
+      parameterShort: parameter.short,
+      direction,
+      domain: parameter.domain,
+    })),
+    domains: Array.from(new Set(matches.map(({ parameter }) => parameter.domain))),
+  };
+}).sort((a, b) => b.triggers.length - a.triggers.length);
+
+const ALL_DOMAINS = Array.from(new Set(PROTOCOL_VIEWS.flatMap((p) => p.domains))).sort();
+
+export default function FoodDatabasePage() {
   const [search, setSearch] = useState("");
+  const [domainFilter, setDomainFilter] = useState<string | null>(null);
 
-  const filteredFoods = BIO_DATABASE.filter(f => 
-    f.name.toLowerCase().includes(search.toLowerCase()) || 
-    f.marker.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = useMemo(() => {
+    const needle = search.trim().toLocaleLowerCase("tr");
+    return PROTOCOL_VIEWS.filter((protocol) => {
+      if (domainFilter && !protocol.domains.includes(domainFilter)) return false;
+      if (!needle) return true;
+      return [
+        protocol.key,
+        ...protocol.foods,
+        ...protocol.compounds,
+        ...protocol.triggers.map((t) => `${t.parameterLabel} ${t.parameterShort}`),
+      ]
+        .join(" ")
+        .toLocaleLowerCase("tr")
+        .includes(needle);
+    });
+  }, [search, domainFilter]);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-end gap-6 bg-slate-900/20 p-8 rounded-[3rem] border border-slate-800/40 backdrop-blur-sm">
-        <div className="max-w-xl">
-          <h2 className="text-3xl font-bold text-white tracking-tight">Klinik Besin Matrisi</h2>
-          <p className="text-slate-400 mt-2 text-sm">
-            Eğitilen BERTurk modeli ile senkronize 100+ biyokimyasal veri noktası. 
-            Tahlil sonuçlarına göre moleküler düzeyde gıda eşleştirmesi.
-          </p>
-        </div>
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
-          <input 
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-black/40 border border-slate-700 rounded-2xl py-3.5 pl-12 pr-6 text-sm text-white focus:border-blue-500 transition-all outline-none"
-            placeholder="Marker (CRP, HGB) veya besin ara..."
+    <div className="space-y-6">
+      <PageHeader
+        title="Besin Protokolleri"
+        subtitle={`${CATALOG_STATS.protocolCount} protokol · ${CATALOG_STATS.foodCount} besin · ${CATALOG_STATS.compoundCount} aktif bileşen`}
+      />
+
+      <div className="flex flex-col gap-3">
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-subtle" size={14} />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Besin, bileşen veya parametre ara (HGB, ferritin, ceviz)..."
+            className="w-full rounded-md border border-line bg-raised py-2 pl-9 pr-3 text-sm text-ink outline-none transition-colors placeholder:text-ink-subtle focus:border-accent"
           />
         </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          <FilterChip active={domainFilter === null} onClick={() => setDomainFilter(null)}>
+            Tümü ({PROTOCOL_VIEWS.length})
+          </FilterChip>
+          {ALL_DOMAINS.map((domain) => (
+            <FilterChip
+              key={domain}
+              active={domainFilter === domain}
+              onClick={() => setDomainFilter(domainFilter === domain ? null : domain)}
+            >
+              {domain}
+            </FilterChip>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredFoods.map((food, i) => (
-          <FoodCard key={i} food={food} />
+      <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+        {filtered.map((protocol) => (
+          <ProtocolCard key={protocol.key} protocol={protocol} />
         ))}
       </div>
-      
-      {filteredFoods.length === 0 && (
-        <div className="text-center py-20 bg-slate-900/20 rounded-[3rem] border border-dashed border-slate-800">
-          <p className="text-slate-500 font-mono text-sm">Kriterlere uygun biyokimyasal veri bulunamadı.</p>
-        </div>
+
+      {filtered.length === 0 && (
+        <Panel className="py-12 text-center">
+          <p className="text-sm text-ink-subtle">Kriterlere uygun protokol bulunamadı.</p>
+        </Panel>
       )}
     </div>
+  );
+}
+
+function ProtocolCard({ protocol }: { protocol: ProtocolView }) {
+  return (
+    <article className="flex flex-col gap-4 rounded-lg border border-line bg-raised p-4">
+      <header className="space-y-2">
+        <div className="flex items-start justify-between gap-2">
+          <h2 className="text-[13px] font-semibold leading-snug text-ink">
+            {protocol.triggers[0]
+              ? `${protocol.triggers[0].parameterLabel} — ${protocol.triggers[0].direction}`
+              : protocol.key}
+          </h2>
+          <code className="shrink-0 rounded-sm bg-sunken px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle">
+            {protocol.key}
+          </code>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {protocol.triggers.map((trigger) => (
+            <Badge
+              key={`${trigger.parameterShort}-${trigger.direction}`}
+              tone={trigger.direction === "Yüksek" ? "high" : "low"}
+            >
+              <span title={`${trigger.parameterLabel} (${trigger.domain})`}>
+                {trigger.parameterShort} {trigger.direction === "Yüksek" ? "▲" : "▼"}
+              </span>
+            </Badge>
+          ))}
+        </div>
+      </header>
+
+      <Section icon={Utensils} title="Önerilen besinler">
+        <div className="flex flex-wrap gap-1">
+          {protocol.foods.map((food) => (
+            <span
+              key={food}
+              className="rounded-sm border border-ok-line bg-ok-soft px-1.5 py-0.5 text-[11px] text-ok"
+            >
+              {food}
+            </span>
+          ))}
+        </div>
+      </Section>
+
+      <Section icon={FlaskConical} title="Aktif bileşenler">
+        <p className="text-[11px] leading-relaxed text-ink-muted">{protocol.compounds.join(" · ")}</p>
+      </Section>
+
+      <Section icon={Sparkles} title="Biyokimyasal sinerji">
+        <p className="text-[11px] leading-relaxed text-ink-muted">{protocol.synergy}</p>
+      </Section>
+
+      <Section icon={Ban} title="Kaçınılması önerilenler">
+        <p className="text-[11px] leading-relaxed text-ink-subtle">{protocol.inhibitors.join(" · ")}</p>
+      </Section>
+
+      <footer className="border-t border-line pt-2.5 text-[10px] text-ink-subtle">
+        {protocol.domains.join(", ") || "Sistem bağımsız"}
+      </footer>
+    </article>
+  );
+}
+
+function Section({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-1.5">
+      <h3 className="flex items-center gap-1.5 text-[11px] font-medium text-ink-muted">
+        <Icon size={11} /> {title}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`rounded-sm border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+        active
+          ? "border-accent-line bg-accent-soft text-accent"
+          : "border-line bg-raised text-ink-muted hover:text-ink"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
