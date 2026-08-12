@@ -15,7 +15,8 @@ perspektifinden beslenme protokolü öneren **klinik karar destek sistemi**.
 | --- | --- |
 | Arayüz | Next.js 16 (App Router, statik export) + React 19 + Tailwind v4 + Recharts |
 | Sunucu | Python 3.12+ / FastAPI |
-| Çıkarım | BERTurk (`dbmdz/bert-base-turkish-cased`) fill-mask, fine-tune edilmiş checkpoint |
+| Örüntü çıkarımı | BERTurk fill-mask — bu proje için tıbbi metinlerle fine-tune edildi ([model](https://huggingface.co/Ruhadam2020/checkpoint-85239)) |
+| Gerekçelendirme | Qwen2.5-3B-Instruct, yerel (fp16) — opsiyonel |
 | OCR | EasyOCR (TR + EN), PDF için pdf2image + Poppler |
 | Veri | `database.json` — tek dosya, tek doğruluk kaynağı |
 
@@ -82,6 +83,60 @@ tanımlanır.
 
 ---
 
+## Modeller
+
+Sistem iki dil modeli kullanır ve **ikisi de opsiyoneldir** — hiçbiri kurulmasa
+bile deterministik kural motoru tam çalışır. Ölçülen isabet oranları için
+[Kıyaslama](#kıyaslama) bölümüne bakın.
+
+| Model | Görevi | Zorunlu mu | Boyut |
+| --- | --- | --- | --- |
+| [`Ruhadam2020/checkpoint-85239`](https://huggingface.co/Ruhadam2020/checkpoint-85239) | Bulgu örüntüsünden olası klinik tabloları sıralar | Hayır — yoksa temel BERTurk'e düşer | 423 MB |
+| [`Qwen/Qwen2.5-3B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct) | Kural motorunun klinik özetini gerekçelendirip anlaşılır dile çevirir | Hayır — yoksa gerekçeli anlatı üretilmez | 5,9 GB |
+
+### 1. BERTurk — alan uyarlaması
+
+[`dbmdz/bert-base-turkish-cased`](https://huggingface.co/dbmdz/bert-base-turkish-cased)
+modelinin **bu proje kapsamında Türkçe tıbbi metinlerle fine-tune edilmiş**
+hâli. Hugging Face'te yayında:
+
+```env
+HEALTHSCOPE_MODEL_PATH=Ruhadam2020/checkpoint-85239
+```
+
+`transformers` bu kimliği ilk açılışta indirir ve önbelleğe alır; yerel bir
+dizin yolu da verebilirsiniz. Değişken **boş bırakılırsa** sunucu yine ayağa
+kalkar ama fine-tune edilmemiş temel modeli kullanır ve log'a uyarı düşer —
+çıkarım kalitesi belirgin şekilde düşer.
+
+### 2. Qwen — hibrit gerekçelendirme katmanı (opsiyonel)
+
+Kural motorunun ürettiği klinik özet üzerinde akıl yürütür. **Teşhis koymaz**;
+zaten bulunmuş bulguları gerekçelendirir.
+
+```env
+HEALTHSCOPE_LLM_PROVIDER=local
+HEALTHSCOPE_LLM_MODEL=Qwen/Qwen2.5-3B-Instruct
+HEALTHSCOPE_LLM_QUANTIZE=0
+```
+
+Donanım: fp16 olarak **~5,8 GB VRAM** ister; 8 GB'lık bir RTX 4060'ta ölçüldü,
+vaka başına ~14 saniye sürüyor. Daha az VRAM'iniz varsa `HEALTHSCOPE_LLM_QUANTIZE=1`
+ile 4-bit'e düşürün (`bitsandbytes` gerekir).
+
+GPU'nuz yoksa yerel model yerine bir uç nokta kullanabilirsiniz:
+
+```env
+HEALTHSCOPE_LLM_PROVIDER=openai-compatible
+HEALTHSCOPE_LLM_BASE_URL=http://localhost:11434/v1
+HEALTHSCOPE_LLM_MODEL=qwen2.5:3b
+```
+
+Katman kapalıyken (`HEALTHSCOPE_LLM_PROVIDER=none`, varsayılan) sistem eskisi
+gibi çalışır; katman hata verse bile analiz sonucu değişmeden döner.
+
+---
+
 ## Kurulum
 
 ### 1. Backend
@@ -121,7 +176,8 @@ API dokümantasyonu, `/status` adresinde motor durumu vardır.
 
 | Değişken | Varsayılan | Açıklama |
 | --- | --- | --- |
-| `HEALTHSCOPE_MODEL_PATH` | — | Fine-tune edilmiş checkpoint dizini. Boşsa temel model kullanılır. |
+| `HEALTHSCOPE_MODEL_PATH` | — | Fine-tune edilmiş model. HuggingFace kimliği (`Ruhadam2020/checkpoint-85239`) ya da yerel dizin. Boşsa temel model kullanılır — bkz. [Modeller](#modeller). |
+| `HEALTHSCOPE_LLM_PROVIDER` | `none` | Hibrit gerekçelendirme katmanı: `none`, `local` ya da `openai-compatible`. |
 | `HEALTHSCOPE_POPPLER_PATH` | otomatik | PDF için Poppler `bin` dizini. Boşsa proje kökündeki `POPPLER/` klasöründe ve `PATH` üzerinde aranır. |
 | `HEALTHSCOPE_CORS_ORIGINS` | `localhost:3000` | İzinli origin listesi. Sağlık verisi işlendiği için joker (`*`) kullanılmaz. |
 | `HEALTHSCOPE_MAX_UPLOAD_MB` | `10` | OCR yükleme sınırı. |

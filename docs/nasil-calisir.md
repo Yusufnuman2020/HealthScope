@@ -312,7 +312,7 @@ python scripts/benchmark_inference.py --url http://127.0.0.1:8000
 | --- | --- |
 | Arayüz | Next.js 16 (App Router, statik export), React 19, Tailwind v4, Recharts |
 | Sunucu | Python 3.12+, FastAPI, Pydantic v2 |
-| Sınıflandırma | BERTurk (`dbmdz/bert-base-turkish-cased`), fine-tune edilmiş checkpoint |
-| Üretken katman | Qwen2.5-3B-Instruct (fp16, ~5.8 GB VRAM) |
+| Örüntü çıkarımı | BERTurk — `dbmdz/bert-base-turkish-cased` temelli, bu proje için tıbbi metinlerle fine-tune edildi (`Ruhadam2020/checkpoint-85239`) |
+| Üretken katman | Qwen2.5-3B-Instruct (fp16, ~5.8 GB VRAM) — opsiyonel |
 | OCR | EasyOCR (TR + EN), PDF için pdf2image + Poppler |
 | Veri | `database.json` — tek dosya, tek doğruluk kaynağı |
