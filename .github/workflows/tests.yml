@@ -23,9 +23,15 @@ jobs:
           cache: pip
 
       - name: Bağımlılıkları kur
-        # Ağır AI/OCR paketleri testler için gerekmez; api_server bunlar
-        # olmadan da ayağa kalkacak şekilde tasarlandı.
-        run: pip install fastapi "pydantic>=2" python-dotenv pytest httpx torch --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple
+        # Ağır AI/OCR paketleri (transformers, easyocr, opencv, pdf2image)
+        # testler için gerekmez; api_server bunları tembel yükler ve yoklarsa
+        # ayağa kalkmaya devam eder.
+        #
+        # Bu ikisi ZORUNLU, tembel yüklenmiyorlar:
+        #   numpy            api_server modül seviyesinde import ediyor
+        #   python-multipart /upload-report form verisi için FastAPI şart koşuyor
+        # İkisi de eksikti; testler api_server'ı import edemeden düşüyordu.
+        run: pip install fastapi "pydantic>=2" python-dotenv pytest httpx numpy python-multipart torch --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple
 
       - name: pytest
         run: python -m pytest tests -q
